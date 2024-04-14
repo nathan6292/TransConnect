@@ -46,7 +46,7 @@ namespace Projet_TransConnect
         {
             // Read the file
             string[] lines = System.IO.File.ReadAllLines(path);
-
+                
             // Display the content
             foreach (string line in lines)
             {
