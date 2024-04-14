@@ -42,16 +42,12 @@ namespace Projet_TransConnect
         }
 
         //Read an Excel file and return the data
-        public static void ReadCSV(string path)
+        public static string[] ReadCSV(string path)
         {
             // Read the file
             string[] lines = System.IO.File.ReadAllLines(path);
-                
-            // Display the content
-            foreach (string line in lines)
-            {
-                Console.WriteLine(line);
-            }
+
+            return lines;
         }
 
         public static string Saisie(string texte, Dictionary<Predicate<string>,string> dico)
@@ -78,6 +74,46 @@ namespace Projet_TransConnect
                 }
             }
             return input;
+        }
+
+        public static double Time_StringtoDouble(string time){
+            if (time.EndsWith("mn"))
+            {
+                // If the time ends with "mn", parse the minutes and divide by 60 to get the decimal equivalent
+                return double.Parse(time.Replace("mn", "")) / 60;
+            }
+            else
+            {
+                // If the time is in the format "hh:mm", split it into hours and minutes
+                var parts = time.Split('h');
+                double hours = double.Parse(parts[0]);
+                double minutes = double.Parse(parts[1]) / 60;
+                return hours + minutes;
+            }
+                    
+        }
+        public static List<Arrête> Graphe(){
+            string[] lines = ReadCSV("./Coordinates.csv");
+
+            List<Node> nodes = new List<Node>();
+            for(int i = 0; i<lines.Length; i++){
+                string[] values = lines[i].Split(';');
+                nodes.Add(new Node(values[0], double.Parse(values[1]), double.Parse(values[2])));               
+            }
+
+            string[] lines2 = ReadCSV("./Distances.csv");
+            List<Arrête> arrêtes = new List<Arrête>();
+            for(int i = 0; i<lines2.Length; i++){
+                string[] values2 = lines2[i].Split(';');
+                //Partie à changer pour ajouter calcul en temps réel des trajets
+                Console.WriteLine(values2[1]);
+                arrêtes.Add(new Arrête(nodes.Find(x => x.GetName() == values2[0]), nodes[0],double.Parse(values2[2]),Time_StringtoDouble(values2[3])));
+            }
+
+            for(int i = 0; i<arrêtes.Count; i++){
+                Console.WriteLine(arrêtes[i].Start.GetName() + " -> " + arrêtes[i].End.GetName() + " : " + arrêtes[i].time);
+            }
+            return arrêtes;
         }
     }
 }

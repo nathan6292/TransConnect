@@ -89,7 +89,9 @@ namespace TransConnect{
             TransConnect.AjouterSalarie(comptable2);
             TransConnect.AjouterSalarie(controleurGestion);
 
-            Tools.ReadCSV("./Distance.csv");
+            //Tools.ReadCSV("./Coordinates.csv");
+
+            List<Arrête> arrêtes = Tools.Graphe();
         }
     }
 }

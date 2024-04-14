@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Projet_TransConnect
 {
-    public class Personne
+    public abstract class Personne
     {
         private static int ProchainID = 1;     //Permet de générer  atomatiquement un ID, qui s'incrémente à chaque création d'un objet (donc est unique)
         
