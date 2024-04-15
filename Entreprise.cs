@@ -213,6 +213,26 @@ namespace Projet_TransConnect
             AjouterSalarie(salarie);
         }
 
+        public void SaveEntreprise(string path)
+        {
+            List<string> text = new List<string>();
+            text.Add(string.Format("{0},{1},{2},{3}", nom, adresse, mail, telephone));
+            File.WriteAllLines(path, text);
+        }
+
+        public static Entreprise ReadEntreprise(string path)
+        {
+            string[] text = File.ReadAllLines(path);
+            string[] elements = text[0].Split(',');
+
+            string nom = elements[0];
+            string adresse = elements[1];
+            string mail = elements[2];
+            int telephone = Convert.ToInt32(elements[3]);
+
+            return new Entreprise(nom, adresse, mail, telephone, null);
+        }
+
         public void SaveSalarie(string path)
         {
             List<string> text = new List<string>();
