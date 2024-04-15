@@ -94,6 +94,7 @@ namespace TransConnect{
 
             Arbre GPS = new Arbre();
             GPS.InitiateGraphe();
+            Console.WriteLine(GPS.ToString());
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Projet_TransConnect
                 string[] values = lines[i].Split(';');
                 nodes.Add(new Node(values[0], double.Parse(values[1]), double.Parse(values[2])));               
             }
-            Console.WriteLine("Fin de la lecture des noeuds");
+
             string[] lines2 = Tools.ReadCSV("./Distances.csv");
             for(int i = 0; i<lines2.Length; i++){
                 string[] values2 = lines2[i].Split(';');
@@ -34,13 +34,18 @@ namespace Projet_TransConnect
                 Node city1 = nodes.Find(x => x.GetName() == values2[0]);
                 Node city2 = nodes.Find(x => x.GetName() == values2[1]);
 
-                city1.AddArrête(new Arrête(nodes.Find(x => x.GetName() == values2[0]), nodes[0],double.Parse(values2[2]),Tools.Time_StringtoDouble(values2[3])));
-                city2.AddArrête(new Arrête(nodes.Find(x => x.GetName() == values2[1]), nodes[0],double.Parse(values2[2]),Tools.Time_StringtoDouble(values2[3])));
+                city1.AddArrête(new Arrête(city1, city2,double.Parse(values2[2]),Tools.Time_StringtoDouble(values2[3])));
+                city2.AddArrête(new Arrête(city2, city1,double.Parse(values2[2]),Tools.Time_StringtoDouble(values2[3])));
             }
+        }
 
+        public override string ToString()
+        {
+            string output="";
             for(int i = 0; i<nodes.Count; i++){
-                Console.WriteLine(nodes[i].ToString());
+                output+= nodes[i].ToString() + "\n";
             }
+            return output;
         }
     }
 }
