@@ -8,16 +8,14 @@ namespace Projet_TransConnect
 {
     public class Client : Personne
     {
-        List<Commande> commandes;
+         
 
-        public Client(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone, List<Commande> commandes = null) : base(id, prenom, nom, naissance, adresse, mail, telephone)
+        public Client(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone) : base(id, prenom, nom, naissance, adresse, mail, telephone)
         {
-            if(commandes == null){
-                this.commandes = new List<Commande>();
-            }
-            else{
-                this.commandes = commandes;
-            }
+            
         }
+
+        
+
     }
 }

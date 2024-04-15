@@ -13,6 +13,8 @@ namespace Projet_TransConnect
         protected string mail;
         protected int telephone;
         protected List<Salarie> salaries;
+
+        protected List<Client> clients;
         Salarie patron;                           //On considère que le patron est de la classe employé (pour faciliter l'orgranigramme)
         //protected List<Commande> commandes;
         //protected List<Client> clients;
@@ -55,6 +57,12 @@ namespace Projet_TransConnect
             set { patron = value; }
         }
 
+        public List<Client> Clients
+        {
+            get { return clients; }
+            set { clients = value; }
+        }
+
         #endregion 
         //A enlever peut etre ??
 
@@ -67,7 +75,7 @@ namespace Projet_TransConnect
             salaries = new List<Salarie>();
             this.patron = patron;
           //commandes = new List<Commande>();
-          //clients = new List<Client>();
+            clients = new List<Client>();
           //vehicules = new List<Vehicule>();
         }
 
@@ -364,6 +372,39 @@ namespace Projet_TransConnect
                     inf.SuperieurHierachique = sup;
                     sup.InferieurHierachique.Add(inf);
                 }
+            }
+        }
+
+        public void SaveClient(string path)
+        {
+            List<string> text = new List<string>();
+            foreach (Client client in clients)
+            {
+                text.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
+                                             client.Id, client.Prenom, client.Nom,
+                                             client.Naissance, client.Adresse, client.Mail,
+                                             client.Telephone));
+            }
+            File.WriteAllLines(path, text);
+        }
+
+        public void ReadClient(string path)
+        {
+            string[] lignes = File.ReadAllLines(path);
+            foreach (string ligne in lignes)
+            {
+                string[] elements = ligne.Split(',');
+
+                int id = int.Parse(elements[0]);
+                string prenom = elements[1];
+                string nom = elements[2];
+                DateTime naissance = DateTime.Parse(elements[3]);
+                string adresse = elements[4];
+                string mail = elements[5];
+                int telephone = Convert.ToInt32(elements[6]);
+
+                Client c = new Client(id, prenom, nom, naissance, adresse, mail, telephone);
+                clients.Add(c);
             }
         }
     }
