@@ -85,7 +85,7 @@ namespace Projet_TransConnect
         {
             if (double.TryParse(x, out double result))
             {
-                return result > 0;
+                return result >= 0;
             }
             else
             {
@@ -154,13 +154,14 @@ namespace Projet_TransConnect
                 Console.WriteLine(s.ToString() + "\n");
             }
         }
-        public Salarie FindSalarie()
+        public Salarie FindSalarie(string text)
         {
 
             bool find = false;
             Console.WriteLine("Liste des salariés : \n");
             this.AfficherSalarie();
             Console.WriteLine("\nVoici la liste des salariés\n");
+            Console.WriteLine("\n\n" + text);
             while (!find)
             {
                 string nom = Tools.Saisie("Entrez le nom du salarié que vous cherchez : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le nom ne peut pas être vide" } });
@@ -192,7 +193,7 @@ namespace Projet_TransConnect
             return null;
         }
 
-        public void CreerSalarie(Entreprise entreprise)
+        public void CreerSalarie()
         {
             string prenom = Tools.Saisie("Entrez le prénom du salarié : ", new Dictionary<Predicate<string>,string> { { IsNotEmpty, "Le prénom ne peut pas être vide" } });
             string nom = Tools.Saisie("Entrez le nom du salarié : ", new Dictionary<Predicate<string>,string> { { IsNotEmpty, "Le nom ne peut pas être vide" } });
@@ -203,11 +204,13 @@ namespace Projet_TransConnect
             string poste = Tools.Saisie("Entrez le poste du salarié : ", new Dictionary<Predicate<string>,string> { { IsNotEmpty, "Le poste ne peut pas être vide" } });
             double salaire = double.Parse(Tools.Saisie("Entrez le salaire du salarié : ", new Dictionary<Predicate<string>,string> { { IsDouble, "Le salaire n'est pas valide" }, { IsPositive, "Le salaire ne peut pas être négatif" } }));
             DateTime dateEmbauche = DateTime.Parse(Tools.Saisie("Entrez la date d'embauche du salarié : ", new Dictionary<Predicate<string>,string> { { IsDate, "La date n'est pas valide" } }));
-            Salarie superieurHierarchique = entreprise.Salaries[0];       //A modifier pour choisir le supérieur hiérarchique
+            Salarie superieurHierarchique = Salaries[0];       //A modifier pour choisir le supérieur hiérarchique
             //Modifier les inféieurs hierachiques
-            Salarie salarie = new Salarie(0,prenom, nom, naissance, adresse, mail, telephone, poste, salaire,dateEmbauche, null);
+            Salarie sup = FindSalarie("Qui est le supérieur hiérarchique de ce nouvel employé ? ");
+            Salarie salarie = new Salarie(0,prenom, nom, naissance, adresse, mail, telephone, poste, salaire,dateEmbauche, sup);
+            sup.InferieurHierachique.Add(salarie);
 
-            entreprise.AjouterSalarie(salarie);
+            AjouterSalarie(salarie);
         }
 
         public void SaveSalarie(string path)
@@ -267,8 +270,12 @@ namespace Projet_TransConnect
                 double salaire = double.Parse(elements[8]);
                 DateTime dateEmbauche = DateTime.Parse(elements[9]);
 
-
-                salaries.Add(new Salarie(id, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, null));
+                Salarie s = new Salarie(id, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, null);
+                if (s.Poste=="PDG")
+                {
+                    this.Patron = s;
+                }
+                salaries.Add(s);
             }
         }
 
@@ -302,6 +309,41 @@ namespace Projet_TransConnect
                 }
 
                 salaries.Add(chauffeur);
+            }
+        }
+
+        public void SaveRelation(string path)
+        {
+            List<string> text = new List<string>();
+            foreach (Salarie salarie in salaries)
+            {
+                if (salarie.InferieurHierachique.Count > 0)
+                {
+                    string ligne = Convert.ToString(salarie.Id);
+                    foreach(Salarie Inf in salarie.InferieurHierachique)
+                    {
+                        ligne += "," + Inf.Id;
+                    }
+                    text.Add(ligne);
+                }
+            }
+            File.WriteAllLines(path, text);
+        }
+
+        public void ReadRelation(string path)
+        {
+            string[] text = File.ReadAllLines(path);
+
+            foreach (string line in text)
+            {
+                string[] content = line.Split(',');
+                Salarie sup = salaries.Find(x => x.Id == int.Parse(content[0]));
+                for (int i=1; i<content.Length; i++)
+                {
+                    Salarie inf = salaries.Find(x=> x.Id == int.Parse(content[i]));
+                    inf.SuperieurHierachique = sup;
+                    sup.InferieurHierachique.Add(inf);
+                }
             }
         }
     }
