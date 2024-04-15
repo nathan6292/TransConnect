@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Projet_TransConnect
 {
-    public abstract class Personne
+    public class Personne
     {
-        private static int ProchainID = 1;     //Permet de générer  atomatiquement un ID, qui s'incrémente à chaque création d'un objet (donc est unique)
-        
+        private List<int> IDexisant = new List<int>();     //Permet de générer  atomatiquement un ID, qui s'incrémente à chaque création d'un objet (donc est unique)
+
         protected int id;
         protected string prenom;
         protected string nom;
@@ -24,7 +24,7 @@ namespace Projet_TransConnect
         /// </summary>
         public int Id
         {
-            get { return id; }         
+            get { return id; }
         }
 
         /// <summary>
@@ -90,10 +90,28 @@ namespace Projet_TransConnect
         /// <param name="adresse"></param>
         /// <param name="mail"></param>
         /// <param name="telephone"></param>
-        public Personne(string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone)
+        public Personne(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone)
         {
-            this.id = ProchainID;
-            ProchainID++;                       //Incrémente l'ID pour le prochain objet pour éviter les doublons
+            if (id == 0)
+            {
+                bool valid = false;
+                while (!valid)
+                {
+                    Random rnd = new Random();
+                    id = rnd.Next(0, 1000000);
+                    if (!IDexisant.Contains(id))
+                    {
+                        IDexisant.Add(id);
+                        this.id = id;
+                        valid = true;
+                    }
+                }
+            }
+            else
+            {
+                this.id = id;
+                IDexisant.Add(id);
+            }
 
             this.prenom = prenom;
             this.nom = nom;

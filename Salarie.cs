@@ -13,7 +13,7 @@ namespace Projet_TransConnect
         protected DateTime dateEmbauche;
         protected List<Salarie> inferieurHierachique;             //Correspond aux inférieurs hiérarchiques de l'employé
         protected Salarie superieurHierarchique;                   //Correspond au supérieur hiérarchique de l'employé
-        
+
         #region accesseurs
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Projet_TransConnect
         /// <param name="poste"></param>
         /// <param name="salaire"></param>
         /// <param name="dateEmbauche"></param>
-        public Salarie(string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone, string poste, double salaire, DateTime dateEmbauche, Salarie superieurHierarchique) : base(prenom, nom, naissance, adresse, mail, telephone)
+        public Salarie(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone, string poste, double salaire, DateTime dateEmbauche, Salarie superieurHierarchique) : base(id, prenom, nom, naissance, adresse, mail, telephone)
         {
             this.poste = poste;
             this.dateEmbauche = dateEmbauche;

@@ -47,9 +47,16 @@ namespace Projet_TransConnect
         /// <param name="salaire"></param>
         /// <param name="dateEmbauche"></param>
 
-        public Chauffeur(string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone, string poste, double salaire, DateTime dateEmbauche, Salarie superieurHierarchique) : base(prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, superieurHierarchique)
+        public Chauffeur(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone, string poste, double salaire, DateTime dateEmbauche, Salarie superieurHierarchique, double tarifHoraire = 0) : base(id, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, superieurHierarchique)
         {
-            this.tarifHoraire = this.CalculerTarifHoraire();
+            if (tarifHoraire == 0)
+            {
+                this.tarifHoraire = this.CalculerTarifHoraire();
+            }
+            else
+            {
+                this.tarifHoraire = tarifHoraire;
+            }
             emploiDuTemps = new List<DateTime>();
         }
 
@@ -74,7 +81,7 @@ namespace Projet_TransConnect
             }
             else if (anciennete >= 10)
             {
-                tarifHoraire *= 1.15; 
+                tarifHoraire *= 1.15;
             }
 
             return tarifHoraire;

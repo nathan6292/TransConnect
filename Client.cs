@@ -10,7 +10,7 @@ namespace Projet_TransConnect
     {
         List<Commande> commandes;
 
-        public Client(string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone, List<Commande> commandes = null) : base(prenom, nom, naissance, adresse, mail, telephone)
+        public Client(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone, List<Commande> commandes = null) : base(id, prenom, nom, naissance, adresse, mail, telephone)
         {
             if(commandes == null){
                 this.commandes = new List<Commande>();
