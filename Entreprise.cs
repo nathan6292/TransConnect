@@ -205,9 +205,104 @@ namespace Projet_TransConnect
             DateTime dateEmbauche = DateTime.Parse(Tools.Saisie("Entrez la date d'embauche du salarié : ", new Dictionary<Predicate<string>,string> { { IsDate, "La date n'est pas valide" } }));
             Salarie superieurHierarchique = entreprise.Salaries[0];       //A modifier pour choisir le supérieur hiérarchique
             //Modifier les inféieurs hierachiques
-            Salarie salarie = new Salarie(prenom, nom, naissance, adresse, mail, telephone, poste, salaire,dateEmbauche, null);
+            Salarie salarie = new Salarie(0,prenom, nom, naissance, adresse, mail, telephone, poste, salaire,dateEmbauche, null);
 
             entreprise.AjouterSalarie(salarie);
+        }
+
+        public void SaveSalarie(string path)
+        {
+            List<string> text = new List<string>();
+            foreach (Salarie salarie in salaries)
+            {
+                if (salarie.Poste != "Chauffeur")
+                {
+                    text.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
+                                                 salarie.Id, salarie.Prenom, salarie.Nom,
+                                                 salarie.Naissance, salarie.Adresse, salarie.Mail,
+                                                 salarie.Telephone, salarie.Poste, salarie.Salaire,
+                                                 salarie.DateEmbauche.ToString("dd/MM/yyyy")));
+                }
+            }
+            File.WriteAllLines(path, text);
+        }
+
+        public void SaveChauffeur(string path)
+        {
+            List<string> text = new List<string>();
+            foreach (Salarie salarie in salaries)
+            {
+                if (salarie is Chauffeur c)
+                {
+                    string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                                                 salarie.Id, salarie.Prenom, salarie.Nom,
+                                                 salarie.Naissance, salarie.Adresse, salarie.Mail,
+                                                 salarie.Telephone, salarie.Poste, salarie.Salaire,
+                                                 salarie.DateEmbauche.ToString("dd/MM/yyyy"), c.TarifHoraire);
+                    foreach (DateTime date in c.EmploiDuTemps)
+                    {
+                        line += "," + date.ToString("dd/MM/yyyy");
+                    }
+                    text.Add(line);
+                }
+            }
+            File.WriteAllLines(path, text);
+        }
+
+        public void ReadSalarie(string path)
+        {
+            string[] lignes = File.ReadAllLines(path);
+            foreach (string ligne in lignes)
+            {
+                string[] elements = ligne.Split(',');
+
+                int id = int.Parse(elements[0]);
+                string prenom = elements[1];
+                string nom = elements[2];
+                DateTime naissance = DateTime.Parse(elements[3]);
+                string adresse = elements[4];
+                string mail = elements[5];
+                int telephone = Convert.ToInt32(elements[6]);
+                string poste = elements[7];
+                double salaire = double.Parse(elements[8]);
+                DateTime dateEmbauche = DateTime.Parse(elements[9]);
+
+
+                salaries.Add(new Salarie(id, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, null));
+            }
+        }
+
+        public void ReadChauffeur(string path)
+        {
+            string[] lignes = File.ReadAllLines(path);
+
+            foreach (string ligne in lignes)
+            {
+                string[] elements = ligne.Split(',');
+
+                int id = int.Parse(elements[0]);
+                string prenom = elements[1];
+                string nom = elements[2];
+                DateTime naissance = DateTime.Parse(elements[3]);
+                string adresse = elements[4];
+                string mail = elements[5];
+                int telephone = Convert.ToInt32(elements[6]);
+                string poste = elements[7];
+                double salaire = double.Parse(elements[8]);
+                DateTime dateEmbauche = DateTime.Parse(elements[9]);
+                double tarifHoraire = double.Parse(elements[10]);
+
+                // Créer un objet Chauffeur et l'ajouter à la liste
+                Chauffeur chauffeur = new Chauffeur(id, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, null, tarifHoraire);
+
+                // Ajouter les dates d'emploi du temps si elles sont disponibles
+                for (int i = 11; i < elements.Length; i++)
+                {
+                    chauffeur.EmploiDuTemps.Add(DateTime.Parse(elements[i]));
+                }
+
+                salaries.Add(chauffeur);
+            }
         }
     }
 }

@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using Projet_TransConnect;
 using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
-using System.Buffers;
 
 namespace TransConnect{
     class Program{
@@ -19,26 +18,26 @@ namespace TransConnect{
 
             // Création des employés
 
-            Salarie directeurGeneral = new Salarie("Dupond", "Mr", new DateTime(1960, 1, 1), "Adresse1", "dupond@example.com", 1234567890, "Directeur Général", 10000, DateTime.Now, null);
-            Salarie directriceCommerciale = new Salarie("Fiesta", "Mme", new DateTime(1975, 3, 15), "Adresse2", "fiesta@example.com", 1234567891, "Directrice Commerciale", 8000, DateTime.Now, directeurGeneral);
-            Salarie commercial1 = new Salarie("Forge", "Mr", new DateTime(1985, 5, 20), "Adresse3", "forge@example.com", 1234567892, "Commercial", 6000, DateTime.Now, directriceCommerciale);
-            Salarie commerciale1 = new Salarie("Fermi", "Mme", new DateTime(1990, 7, 10), "Adresse4", "fermi@example.com", 1234567893, "Commerciale", 6000, DateTime.Now, directriceCommerciale);
-            Salarie directeurOperations = new Salarie("Fetard", "Mr", new DateTime(1963, 2, 28), "Adresse5", "fetard@example.com", 1234567894, "Directeur des opérations", 9000, DateTime.Now, directeurGeneral);
-            Salarie chefEquipe1 = new Salarie("Royal", "Mr", new DateTime(1980, 8, 5), "Adresse6", "royal@example.com", 1234567895, "Chef d'Équipe", 7000, DateTime.Now, directeurOperations);
-            Salarie chauffeur1 = new Salarie("Romu", "Mr", new DateTime(1992, 12, 25), "Adresse7", "romu@example.com", 1234567896, "Chauffeur", 5000, DateTime.Now, chefEquipe1);
-            Salarie chauffeur2 = new Salarie("Romi", "Mr", new DateTime(1992, 12, 25), "Adresse7", "romu@example.com", 1234567896, "Chauffeur", 5000, DateTime.Now, chefEquipe1);
-            Salarie chauffeur3 = new Salarie("Roma", "Mr", new DateTime(1992, 12, 25), "Adresse7", "romu@example.com", 1234567896, "Chauffeur", 5000, DateTime.Now, chefEquipe1);
-            Salarie chefEquipe2 = new Salarie("Prince", "Mme", new DateTime(1978, 4, 17), "Adresse8", "prince@example.com", 1234567897, "Chef d'Équipe", 7000, DateTime.Now, directeurOperations);
-            Salarie chauffeur4 = new Salarie("Rome", "Mme", new DateTime(1987, 6, 30), "Adresse9", "rome@example.com", 1234567898, "Chauffeur", 5000, DateTime.Now, chefEquipe2);
-            Salarie chauffeur5 = new Salarie("Rimou", "Mme", new DateTime(1995, 10, 12), "Adresse10", "rimou@example.com", 1234567899, "Chauffeur", 5000, DateTime.Now, chefEquipe2);
-            Salarie directriceRH = new Salarie("Joyeuse", "Mme", new DateTime(1970, 9, 3), "Adresse11", "joyeuse@example.com", 1234567800, "Directrice des RH", 9000, DateTime.Now, directeurGeneral);
-            Salarie formation = new Salarie("Couleur", "Mme", new DateTime(1983, 11, 22), "Adresse12", "couleur@example.com", 1234567801, "Formation", 7000, DateTime.Now, directriceRH);
-            Salarie contrats = new Salarie("ToutleMonde", "Mme", new DateTime(1986, 1, 8), "Adresse13", "toutlemonde@example.com", 1234567802, "Contrats", 7000, DateTime.Now, directriceRH);
-            Salarie directeurFinancier = new Salarie("GripSous", "Mr", new DateTime(1967, 7, 19), "Adresse14", "gripsous@example.com", 1234567803, "Directeur Financier", 9000, DateTime.Now, directeurGeneral);
-            Salarie directionComptable = new Salarie("Picsou", "Mr", new DateTime(1972, 5, 25), "Adresse15", "picsou@example.com", 1234567804, "Direction comptable", 8000, DateTime.Now, directeurFinancier);
-            Salarie comptable1 = new Salarie("Fournier", "Mme", new DateTime(1982, 4, 13), "Adresse16", "fournier@example.com", 1234567805, "Comptable", 6000, DateTime.Now, directionComptable);
-            Salarie comptable2 = new Salarie("Gautier", "Mme", new DateTime(1991, 6, 8), "Adresse17", "gautier@example.com", 1234567806, "Comptable", 6000, DateTime.Now, directionComptable);
-            Salarie controleurGestion = new Salarie("GrosSous", "Mr", new DateTime(1989, 3, 1), "Adresse18", "grossoou@example.com", 1234567807, "Contrôleur de Gestion", 8000, DateTime.Now, directeurFinancier);
+            Salarie directeurGeneral = new Salarie(0,"Dupond", "Mr", new DateTime(1960, 1, 1), "Adresse1", "dupond@example.com", 1234567890, "Directeur Général", 10000, DateTime.Now, null);
+            Salarie directriceCommerciale = new Salarie(0, "Fiesta", "Mme", new DateTime(1975, 3, 15), "Adresse2", "fiesta@example.com", 1234567891, "Directrice Commerciale", 8000, DateTime.Now, directeurGeneral);
+            Salarie commercial1 = new Salarie(0, "Forge", "Mr", new DateTime(1985, 5, 20), "Adresse3", "forge@example.com", 1234567892, "Commercial", 6000, DateTime.Now, directriceCommerciale);
+            Salarie commerciale1 = new Salarie(0, "Fermi", "Mme", new DateTime(1990, 7, 10), "Adresse4", "fermi@example.com", 1234567893, "Commerciale", 6000, DateTime.Now, directriceCommerciale);
+            Salarie directeurOperations = new Salarie(0, "Fetard", "Mr", new DateTime(1963, 2, 28), "Adresse5", "fetard@example.com", 1234567894, "Directeur des opérations", 9000, DateTime.Now, directeurGeneral);
+            Salarie chefEquipe1 = new Salarie(0, "Royal", "Mr", new DateTime(1980, 8, 5), "Adresse6", "royal@example.com", 1234567895, "Chef d'Équipe", 7000, DateTime.Now, directeurOperations);
+            Salarie chauffeur1 = new Salarie(0, "Romu", "Mr", new DateTime(1992, 12, 25), "Adresse7", "romu@example.com", 1234567896, "Chauffeur", 5000, DateTime.Now, chefEquipe1);
+            Salarie chauffeur2 = new Salarie(0, "Romi", "Mr", new DateTime(1992, 12, 25), "Adresse7", "romu@example.com", 1234567896, "Chauffeur", 5000, DateTime.Now, chefEquipe1);
+            Salarie chauffeur3 = new Salarie(0, "Roma", "Mr", new DateTime(1992, 12, 25), "Adresse7", "romu@example.com", 1234567896, "Chauffeur", 5000, DateTime.Now, chefEquipe1);
+            Salarie chefEquipe2 = new Salarie(0, "Prince", "Mme", new DateTime(1978, 4, 17), "Adresse8", "prince@example.com", 1234567897, "Chef d'Équipe", 7000, DateTime.Now, directeurOperations);
+            Salarie chauffeur4 = new Salarie(0, "Rome", "Mme", new DateTime(1987, 6, 30), "Adresse9", "rome@example.com", 1234567898, "Chauffeur", 5000, DateTime.Now, chefEquipe2);
+            Salarie chauffeur5 = new Salarie(0, "Rimou", "Mme", new DateTime(1995, 10, 12), "Adresse10", "rimou@example.com", 1234567899, "Chauffeur", 5000, DateTime.Now, chefEquipe2);
+            Salarie directriceRH = new Salarie(0, "Joyeuse", "Mme", new DateTime(1970, 9, 3), "Adresse11", "joyeuse@example.com", 1234567800, "Directrice des RH", 9000, DateTime.Now, directeurGeneral);
+            Salarie formation = new Salarie(0, "Couleur", "Mme", new DateTime(1983, 11, 22), "Adresse12", "couleur@example.com", 1234567801, "Formation", 7000, DateTime.Now, directriceRH);
+            Salarie contrats = new Salarie(0, "ToutleMonde", "Mme", new DateTime(1986, 1, 8), "Adresse13", "toutlemonde@example.com", 1234567802, "Contrats", 7000, DateTime.Now, directriceRH);
+            Salarie directeurFinancier = new Salarie(0, "GripSous", "Mr", new DateTime(1967, 7, 19), "Adresse14", "gripsous@example.com", 1234567803, "Directeur Financier", 9000, DateTime.Now, directeurGeneral);
+            Salarie directionComptable = new Salarie(0, "Picsou", "Mr", new DateTime(1972, 5, 25), "Adresse15", "picsou@example.com", 1234567804, "Direction comptable", 8000, DateTime.Now, directeurFinancier);
+            Salarie comptable1 = new Salarie(0, "Fournier", "Mme", new DateTime(1982, 4, 13), "Adresse16", "fournier@example.com", 1234567805, "Comptable", 6000, DateTime.Now, directionComptable);
+            Salarie comptable2 = new Salarie(0, "Gautier", "Mme", new DateTime(1991, 6, 8), "Adresse17", "gautier@example.com", 1234567806, "Comptable", 6000, DateTime.Now, directionComptable);
+            Salarie controleurGestion = new Salarie(0, "GrosSous", "Mr", new DateTime(1989, 3, 1), "Adresse18", "grossoou@example.com", 1234567807, "Contrôleur de Gestion", 8000, DateTime.Now, directeurFinancier);
 
             // Ajout des subordonnés
 
@@ -95,6 +94,7 @@ namespace TransConnect{
             Arbre GPS = new Arbre();
             GPS.InitiateGraphe();
             Console.WriteLine(GPS.ToString());
+
         }
     }
 }
