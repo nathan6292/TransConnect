@@ -18,5 +18,10 @@ namespace Projet_TransConnect
             this.distance = distance;
             this.time = time;
         }
+
+        public override string ToString()
+        {
+            return "Start : " + this.Start.GetName() + " End : " + this.End.GetName() + " Distance : " + this.distance + " Time : " + this.time;
+        }
     }
 }

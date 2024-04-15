@@ -92,28 +92,6 @@ namespace Projet_TransConnect
             }
                     
         }
-        public static List<Arrête> Graphe(){
-            string[] lines = ReadCSV("./Coordinates.csv");
-
-            List<Node> nodes = new List<Node>();
-            for(int i = 0; i<lines.Length; i++){
-                string[] values = lines[i].Split(';');
-                nodes.Add(new Node(values[0], double.Parse(values[1]), double.Parse(values[2])));               
-            }
-
-            string[] lines2 = ReadCSV("./Distances.csv");
-            List<Arrête> arrêtes = new List<Arrête>();
-            for(int i = 0; i<lines2.Length; i++){
-                string[] values2 = lines2[i].Split(';');
-                //Partie à changer pour ajouter calcul en temps réel des trajets
-                Console.WriteLine(values2[1]);
-                arrêtes.Add(new Arrête(nodes.Find(x => x.GetName() == values2[0]), nodes[0],double.Parse(values2[2]),Time_StringtoDouble(values2[3])));
-            }
-
-            for(int i = 0; i<arrêtes.Count; i++){
-                Console.WriteLine(arrêtes[i].Start.GetName() + " -> " + arrêtes[i].End.GetName() + " : " + arrêtes[i].time);
-            }
-            return arrêtes;
-        }
+        
     }
 }

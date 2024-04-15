@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using Projet_TransConnect;
 using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
+using System.Buffers;
 
 namespace TransConnect{
     class Program{
@@ -91,7 +92,8 @@ namespace TransConnect{
 
             //Tools.ReadCSV("./Coordinates.csv");
 
-            List<Arrête> arrêtes = Tools.Graphe();
+            Arbre GPS = new Arbre();
+            GPS.InitiateGraphe();
         }
     }
 }
