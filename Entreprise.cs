@@ -15,7 +15,7 @@ namespace Projet_TransConnect
         protected List<Salarie> salaries;
 
         protected List<Client> clients;
-        Salarie patron;                           //On considère que le patron est de la classe employé (pour faciliter l'orgranigramme)
+        protected Salarie patron;                           //On considère que le patron est de la classe employé (pour faciliter l'orgranigramme)
         //protected List<Commande> commandes;
         //protected List<Client> clients;
         //protected List<Vehicule> vehicules;
@@ -72,11 +72,9 @@ namespace Projet_TransConnect
             this.adresse = adresse;
             this.mail = mail;
             this.telephone = telephone;
-            salaries = new List<Salarie>();
+            this.salaries = new List<Salarie>();
+            this.clients = new List<Client>();
             this.patron = patron;
-          //commandes = new List<Commande>();
-            clients = new List<Client>();
-          //vehicules = new List<Vehicule>();
         }
 
         /// <summary>
@@ -100,6 +98,12 @@ namespace Projet_TransConnect
                 return false;
             }
         });
+
+        public string ToString()
+        {
+            return "Nom : " + nom + "\nAdresse : " + adresse + "\nMail : " + mail + "\nTéléphone : " + telephone + "\nDirigeant : " + patron.Nom + "\nNombre de salariés : " + salaries.Count + "\nNombre de clients : " + clients.Count;
+        }
+
         public void AjouterSalarie(Salarie salarie)
         {
             salaries.Add(salarie);
@@ -155,6 +159,9 @@ namespace Projet_TransConnect
             }
         }
 
+        /// <summary>
+        /// Afficher la liste des salariés de l'entreprise
+        /// </summary>
         public void AfficherSalarie()
         {
             foreach (Salarie s in salaries)
@@ -162,6 +169,18 @@ namespace Projet_TransConnect
                 Console.WriteLine(s.ToString() + "\n");
             }
         }
+
+        /// <summary>
+        /// Afficher la liste des clients de l'entreprise
+        /// </summary>
+        public void AfficherClient()
+        {
+            foreach (Client c in clients)
+            {
+                Console.WriteLine(c.ToString() + "\n");
+            }
+        }
+
         public Salarie FindSalarie(string text)
         {
 
@@ -380,7 +399,7 @@ namespace Projet_TransConnect
             List<string> text = new List<string>();
             foreach (Client client in clients)
             {
-                text.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
+                text.Add(string.Format("{0},{1},{2},{3},{4},{5},{6}",
                                              client.Id, client.Prenom, client.Nom,
                                              client.Naissance, client.Adresse, client.Mail,
                                              client.Telephone));
