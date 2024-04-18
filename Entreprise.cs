@@ -18,7 +18,6 @@ namespace Projet_TransConnect
     protected List<Client> clients;
     protected Salarie patron;                           //On considère que le patron est de la classe employé (pour faciliter l'orgranigramme)
     //protected List<Commande> commandes;
-    //protected List<Client> clients;
     //protected List<Vehicule> vehicules;
 
     #region accesseurs

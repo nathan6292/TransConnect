@@ -10,7 +10,7 @@ namespace TransConnect{
     class Program{
         static void Main(string[] args){
 
-                //Console.WriteLine("test");
+             
             double[] startCoordinates = { 7.25, 43.7 };
             double[] endCoordinates = { 2.333333, 48.866667 };
             //Tools.ReadCSV("Distance.csv");
