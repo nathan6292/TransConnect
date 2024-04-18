@@ -18,6 +18,7 @@ namespace Projet_TransConnect
     protected List<Client> clients;
     protected Salarie patron;                           //On considère que le patron est de la classe employé (pour faciliter l'orgranigramme)
     //protected List<Commande> commandes;
+    //protected List<Client> clients;
     //protected List<Vehicule> vehicules;
 
     #region accesseurs
@@ -91,26 +92,20 @@ namespace Projet_TransConnect
         this.clients = new List<Client>();
     }
 
-    public void ReadSauvegarde(string path)
-    {
-        try
-        {
-            ReadClient(path + "\\Clients.csv");
-            ReadChauffeur(path + "\\Chauffeur.csv");
-            ReadSalarie(path + "\\Salaries.csv");
-            ReadRelation(path + "\\Relations.csv");
-        }
-        catch { }
-    }
+
 
     /// <summary>
     /// Ajouter un salarié à l'entreprise
     /// </summary>
     /// <param name="salarie"></param>
 
+
+    #region Predicate utilisés pour les saisies
+    Predicate<string> IsBool = new Predicate<string>(x => x == "oui" || x == "non");
     Predicate<string> IsDouble = new Predicate<string>(x => double.TryParse(x, out _));
     Predicate<string> IsInt = new Predicate<string>(x => int.TryParse(x, out _));
     Predicate<string> IsDate = new Predicate<string>(x => DateTime.TryParse(x, out _));
+    Predicate<string> IsPastDate = new Predicate<string>(x => DateTime.Parse(x) < DateTime.Now);
     Predicate<string> IsMail = new Predicate<string>(x => x.Contains("@"));
     Predicate<string> IsNotEmpty = new Predicate<string>(x => x.Length > 0);
     Predicate<string> IsPositive = new Predicate<string>(x =>
@@ -125,15 +120,13 @@ namespace Projet_TransConnect
         }
     });
 
+    #endregion
+
     public string ToString()
     {
         return "Nom : " + nom + "\nAdresse : " + adresse + "\nMail : " + mail + "\nTéléphone : " + telephone + "\nDirigeant : " + patron.Nom + "\nNombre de salariés : " + salaries.Count + "\nNombre de clients : " + clients.Count;
     }
 
-    public void AjouterSalarie(Salarie salarie)
-    {
-        salaries.Add(salarie);
-    }
 
     /// <summary>
     /// Supprimer/Licencier un salarié de l'entreprise
@@ -207,6 +200,7 @@ namespace Projet_TransConnect
         }
     }
 
+
     public Salarie FindSalarie(string text)
     {
 
@@ -250,22 +244,64 @@ namespace Projet_TransConnect
     {
         string prenom = Tools.Saisie("Entrez le prénom du salarié : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le prénom ne peut pas être vide" } });
         string nom = Tools.Saisie("Entrez le nom du salarié : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le nom ne peut pas être vide" } });
-        DateTime naissance = DateTime.Parse(Tools.Saisie("Entrez la date de naissance du salarié : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" } }));
+        DateTime naissance = DateTime.Parse(Tools.Saisie("Entrez la date de naissance du salarié : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" }, { IsPastDate, "La date n'est pas dans le passé" } }));
         string adresse = Tools.Saisie("Entrez l'adresse du salarié : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "L'adresse ne peut pas être vide" } });
         string mail = Tools.Saisie("Entrez l'adresse mail du salarié : ", new Dictionary<Predicate<string>, string> { { IsMail, "L'adresse mail n'est pas valide" } });
         int telephone = int.Parse(Tools.Saisie("Entrez le numéro de téléphone du salarié : ", new Dictionary<Predicate<string>, string> { { IsInt, "Le numéro de téléphone n'est pas valide" }, { x => x.Length == 10, "Le numéro doit contenir 10 chiffres" } }));
-        string poste = Tools.Saisie("Entrez le poste du salarié : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le poste ne peut pas être vide" } });
+        bool IsChauffeur = Tools.Saisie("Le salarié est-il un chauffeur ? (Tapez 'oui' ou 'non' en miniscules) : ", new Dictionary<Predicate<string>, string> { { IsBool, "La réponse n'est pas valide" } }) == "oui";
+        string poste;
+        if (IsChauffeur)
+        {
+            poste = "Chauffeur";
+        }
+        else
+        {
+            poste = Tools.Saisie("Entrez le poste du salarié : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le poste ne peut pas être vide" } });
+        }
         double salaire = double.Parse(Tools.Saisie("Entrez le salaire du salarié : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le salaire n'est pas valide" }, { IsPositive, "Le salaire ne peut pas être négatif" } }));
-        DateTime dateEmbauche = DateTime.Parse(Tools.Saisie("Entrez la date d'embauche du salarié : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" } }));
+        DateTime dateEmbauche = DateTime.Parse(Tools.Saisie("Entrez la date d'embauche du salarié : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" }}));
         Salarie superieurHierarchique = Salaries[0];       //A modifier pour choisir le supérieur hiérarchique
         //Modifier les inféieurs hierachiques
         Salarie sup = FindSalarie("Qui est le supérieur hiérarchique de ce nouvel employé ? ");
-        Salarie salarie = new Salarie(0, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, sup);
-        sup.InferieurHierachique.Add(salarie);
+        if (poste == "Chauffeur")
+        {
+            Chauffeur chauffeur = new Chauffeur(0, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, sup, 0);
+            sup.InferieurHierachique.Add(chauffeur);
 
-        AjouterSalarie(salarie);
+            salaries.Add(chauffeur);
+        }
+        else
+        {
+            Salarie salarie = new Salarie(0, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, sup);
+            sup.InferieurHierachique.Add(salarie);
+
+            salaries.Add(salarie);
+        }
     }
 
+    public void CreerClient()
+    {
+        string p = Tools.Saisie("Entrez le prénom du client : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le prénom ne peut pas être vide" } });
+        string n = Tools.Saisie("Entrez le nom du client : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le nom ne peut pas être vide" } });
+        DateTime na = DateTime.Parse(Tools.Saisie("Entrez la date de naissance du client : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" }, { IsPastDate, "La date n'est pas dans le passé" } }));
+        string a = Tools.Saisie("Entrez l'adresse du client : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "L'adresse ne peut pas être vide" } });
+        string m = Tools.Saisie("Entrez l'adresse mail du client : ", new Dictionary<Predicate<string>, string> { { IsMail, "L'adresse mail n'est pas valide" } });
+        int t = int.Parse(Tools.Saisie("Entrez le numéro de téléphone du client : ", new Dictionary<Predicate<string>, string> { { IsInt, "Le numéro de téléphone n'est pas valide" }, { x => x.Length == 10, "Le numéro doit contenir 10 chiffres" } }));
+        clients.Add(new Client(0, p, n, na, a, m, t));
+    }
+
+    #region Lecture/Ecriture de Fichiers
+    public void ReadSauvegarde(string path)
+    {
+        try
+        {
+            ReadClient(path + "\\Clients.csv");
+            ReadChauffeur(path + "\\Chauffeur.csv");
+            ReadSalarie(path + "\\Salaries.csv");
+            ReadRelation(path + "\\Relations.csv");
+        }
+        catch { }
+    }
     public void SaveEntreprise(string path)
     {
         List<string> text = new List<string>();
@@ -441,5 +477,7 @@ namespace Projet_TransConnect
             clients.Add(c);
         }
     }
+
+    #endregion
 }
 }
