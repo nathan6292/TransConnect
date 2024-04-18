@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TransConnect;
 
 namespace Projet_TransConnect
 {
     
-    public class Entreprise
+public class Entreprise
 {
     protected string nom;
     protected string adresse;
@@ -18,8 +19,7 @@ namespace Projet_TransConnect
     protected List<Client> clients;
     protected Salarie patron;                           //On considère que le patron est de la classe employé (pour faciliter l'orgranigramme)
     //protected List<Commande> commandes;
-    //protected List<Client> clients;
-    //protected List<Vehicule> vehicules;
+    protected List<Vehicule> vehicules;
 
     #region accesseurs
     public string Nom
@@ -299,6 +299,18 @@ namespace Projet_TransConnect
             ReadChauffeur(path + "\\Chauffeur.csv");
             ReadSalarie(path + "\\Salaries.csv");
             ReadRelation(path + "\\Relations.csv");
+        }
+        catch { }
+    }
+
+    public void WriteSauvegarde(string path)
+    {
+        try
+        {
+            SaveClient(path + "\\Clients.csv");
+            SaveChauffeur(path + "\\Chauffeur.csv");
+            SaveSalarie(path + "\\Salaries.csv");
+            SaveRelation(path + "\\Relations.csv");
         }
         catch { }
     }

@@ -2,10 +2,10 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using Projet_TransConnect;
+
 using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
-
+using Projet_TransConnect;
 namespace TransConnect{
     class Program{
         static void Main(string[] args){
@@ -20,6 +20,8 @@ namespace TransConnect{
             TransConnect.ReadSauvegarde("Sauvegarde");
 
             TransConnect.Organigramme(TransConnect.Patron);
+
+            TransConnect.WriteSauvegarde("Sauvegarde");
 
             
         }
