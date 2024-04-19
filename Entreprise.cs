@@ -596,7 +596,8 @@ public class Entreprise
 
             foreach (string date in dates)
             {
-                v.EmploiDuTemps.Add(DateTime.Parse(date));
+                try { v.EmploiDuTemps.Add(DateTime.Parse(date)); }
+                catch{  }
             }
 
             vehicules.Add(v);
