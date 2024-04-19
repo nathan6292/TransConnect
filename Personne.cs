@@ -127,9 +127,9 @@ namespace Projet_TransConnect
         /// Affiche les informations de la personne
         /// </summary>
         /// <returns></returns>
-        public string ToString()
+        public override string ToString()
         {
-            return "ID : " + id + "\nPrénom : " + prenom + "\nNom : " + nom + "\nDate de naissance : " + naissance + "\nAdresse : " + adresse + "\nMail : " + mail + "\nTéléphone : " + telephone;
+            return "ID : " + id + "\nPrénom : " + prenom + "\nNom : " + nom + "\nDate de naissance : " + naissance.ToString("dd/MM/yyyy") + "\nAdresse : " + adresse + "\nMail : " + mail + "\nTéléphone : " + telephone;
         }
 
     }

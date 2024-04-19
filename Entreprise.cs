@@ -64,6 +64,12 @@ public class Entreprise
         set { clients = value; }
     }
 
+    public List<Vehicule> Vehicules
+    {
+        get { return vehicules; }
+        set { vehicules = value; }
+    }
+
     #endregion 
     //A enlever peut etre ??
 
@@ -75,6 +81,7 @@ public class Entreprise
         this.telephone = telephone;
         this.salaries = new List<Salarie>();
         this.clients = new List<Client>();
+        this.vehicules = new List<Vehicule>();
         this.patron = patron;
     }
 
@@ -90,6 +97,7 @@ public class Entreprise
         this.patron = null;
         this.salaries = new List<Salarie>();
         this.clients = new List<Client>();
+        this.vehicules = new List<Vehicule>();
     }
 
 
@@ -200,6 +208,13 @@ public class Entreprise
         }
     }
 
+    public void AfficherVehicule()
+    {
+        foreach (Vehicule v in vehicules)
+        {
+            Console.WriteLine(v.ToString() + "\n");
+        }
+    }
 
     public Salarie FindSalarie(string text)
     {
@@ -299,6 +314,7 @@ public class Entreprise
             ReadChauffeur(path + "\\Chauffeur.csv");
             ReadSalarie(path + "\\Salaries.csv");
             ReadRelation(path + "\\Relations.csv");
+            ReadVehicule(path + "\\Vehicules.csv");
         }
         catch { }
     }
@@ -311,6 +327,7 @@ public class Entreprise
             SaveChauffeur(path + "\\Chauffeur.csv");
             SaveSalarie(path + "\\Salaries.csv");
             SaveRelation(path + "\\Relations.csv");
+            SaveVehicule(path + "\\Vehicules.csv");
         }
         catch { }
     }
@@ -489,6 +506,103 @@ public class Entreprise
             clients.Add(c);
         }
     }
+
+    public void SaveVehicule(string path)
+    {
+        List<string> text = new List<string>();
+
+        foreach (Vehicule vehicule in vehicules)
+        {
+            List<string> line = new List<string>();
+            line.Add("Type");
+            line.Add(vehicule.Immatriculation);
+            line.Add(vehicule.Marque);
+            line.Add(vehicule.Modele);
+            line.Add(vehicule.Annee.ToString());
+
+            switch (vehicule)
+            {
+                case Voiture v:
+                    line[0] = "Voiture";
+                    line.Add(v.NbPlaces.ToString());
+                    break;
+                case Camionette c:
+                    line[0] = "Camionette";
+                    line.Add(c.Volume.ToString());
+                    line.Add(c.Usage);
+                    break;
+                case PoidsLourd pl:
+                    line.Add(pl.Poids.ToString());
+                    line.Add(pl.Volume.ToString());
+                    switch (pl)
+                    {
+                        case CamionFrigorifique cf:
+                            line[0] = "CamionFrigorifique";
+                            line.Add(cf.NbGrpElectrogene.ToString());
+                            break;
+                        case CamionBenne cb:
+                            line[0] = "CamionBenne";
+                            line.Add(cb.NbBennes.ToString());
+                            line.Add(cb.Grue.ToString());
+                            break;
+                        case CamionCiterne cc:
+                            line[0] = "CamionCiterne";
+                            line.Add(cc.TypeCuve);
+                            break;
+                    }
+                    break;
+            }
+
+            text.Add(string.Join(",", line));
+            line.Clear();
+            foreach(DateTime date in vehicule.EmploiDuTemps)
+            {
+                line.Add(date.ToString("dd/MM/yyyy"));
+            }
+            text.Add(string.Join(",", line));
+        }
+
+        File.WriteAllLines(path, text);
+    }
+
+    public void ReadVehicule(string path)
+    {
+        string[] lines = File.ReadAllLines(path);
+
+        for (int i = 0; i < lines.Length; i += 2)
+        {
+            Vehicule v = null;
+            string[] line = lines[i].Split(',');
+            string[] dates = lines[i + 1].Split(',');
+
+            switch (line[0])
+            {
+                case "Voiture":
+                    v = new Voiture(line[1], line[2], line[3], int.Parse(line[4]), int.Parse(line[5]));
+                    break;
+                case "Camionette":
+                    v = new Camionette(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), line[6]);
+                    break;
+                case "CamionFrigorifique":
+                    v = new CamionFrigorifique(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), int.Parse(line[7]));
+                    break;
+                case "CamionBenne":
+                    v = new CamionBenne(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), int.Parse(line[7]), bool.Parse(line[8]));
+                    break;
+                case "CamionCiterne":
+                    v = new CamionCiterne(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), line[7]);
+                    break;
+            }
+
+            foreach (string date in dates)
+            {
+                v.EmploiDuTemps.Add(DateTime.Parse(date));
+            }
+
+            vehicules.Add(v);
+        }
+    }
+
 
     #endregion
 }

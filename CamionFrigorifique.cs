@@ -22,6 +22,11 @@ namespace TransConnect{
         {
             this.nbGrpElectrogene = NbGrpElectrogene;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "Nombre de groupe électrogène : " + nbGrpElectrogene + "\n";
+        }
     }
     
 }

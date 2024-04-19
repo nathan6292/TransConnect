@@ -22,5 +22,10 @@ namespace TransConnect{
         {
             this.nbPlaces = nbPlaces;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "Nombre de places : " + nbPlaces + "\n";
+        }
     }
 }

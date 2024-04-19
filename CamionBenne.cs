@@ -29,5 +29,9 @@ namespace TransConnect{
             this.nbBennes = nbBennes;
             this.grue = grue;
         }
+        public override string ToString()
+        {
+            return base.ToString() + "Nombre de bennes : " + nbBennes + "\nGrue : " + (grue ? "Oui" : "Non") + "\n";
+        }
     }
 }

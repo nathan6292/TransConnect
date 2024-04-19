@@ -29,5 +29,10 @@ namespace TransConnect{
             this.poids = poids;
             this.volume = volume;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "Poids : " + poids + "\nVolume : " + volume + "\n";
+        }
     }
 }

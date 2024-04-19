@@ -19,11 +19,9 @@ namespace TransConnect{
             Entreprise TransConnect = new Entreprise("Sauvegarde");
             TransConnect.ReadSauvegarde("Sauvegarde");
 
-            TransConnect.Organigramme(TransConnect.Patron);
+            
 
             TransConnect.WriteSauvegarde("Sauvegarde");
-
-            
         }
     }
 }

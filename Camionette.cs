@@ -19,7 +19,7 @@ namespace TransConnect{
 
         public string Usage
         {
-            set { usage = value; }
+            get { return usage;}
         }
 
         #endregion
@@ -28,6 +28,10 @@ namespace TransConnect{
         {
             this.volume = volume;
             this.usage = usage;
+        }
+        public override string ToString()
+        {
+            return base.ToString() + "Volume : " + volume + "\nUsage : " + usage + "\n";
         }
     }
 }

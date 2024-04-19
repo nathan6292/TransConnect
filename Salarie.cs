@@ -91,9 +91,9 @@ namespace Projet_TransConnect
         /// Affiche les informations de l'employé
         /// </summary>
         /// <returns></returns>
-        public string ToString()
+        public override string ToString()
         {
-            return base.ToString() + "\nPoste : " + poste + "\nSalaire : " + salaire + "\nDate d'embauche : " + dateEmbauche;
+            return base.ToString() + "\nPoste : " + poste + "\nSalaire : " + salaire + "\nDate d'embauche : " + dateEmbauche.ToString("dd/MM/yyyy");
         }
 
         public void ToStringOrganigramme(int tab)

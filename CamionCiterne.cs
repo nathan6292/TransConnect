@@ -21,5 +21,9 @@ namespace TransConnect{
         {
             this.typeCuve = typeCuve;
         }
+        public override string ToString()
+        {
+            return base.ToString() + "Type de cuve : " + typeCuve + "\n";
+        }
     }
 }

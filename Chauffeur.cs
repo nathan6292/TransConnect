@@ -86,5 +86,20 @@ namespace Projet_TransConnect
 
             return tarifHoraire;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\nTarif horaire : " + tarifHoraire + "\n";
+        }
+
+        public string EmploiDuTempsToString()
+        {
+            string str = "";
+            foreach (DateTime date in emploiDuTemps)
+            {
+                str += date.ToString("dd/MM/yyyy") + "\n";
+            }
+            return str;
+        }
     }
 }
