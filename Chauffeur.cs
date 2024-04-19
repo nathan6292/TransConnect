@@ -47,7 +47,7 @@ namespace Projet_TransConnect
         /// <param name="salaire"></param>
         /// <param name="dateEmbauche"></param>
 
-        public Chauffeur(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone, string poste, double salaire, DateTime dateEmbauche, Salarie superieurHierarchique, double tarifHoraire = 0) : base(id, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, superieurHierarchique)
+        public Chauffeur(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, long telephone, string poste, double salaire, DateTime dateEmbauche, Salarie superieurHierarchique, double tarifHoraire = 0) : base(id, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, superieurHierarchique)
         {
             if (tarifHoraire == 0)
             {
@@ -89,7 +89,7 @@ namespace Projet_TransConnect
 
         public override string ToString()
         {
-            return base.ToString() + "\nTarif horaire : " + tarifHoraire + "\n";
+            return base.ToString() + "Tarif horaire : " + tarifHoraire + "\n";
         }
 
         public string EmploiDuTempsToString()

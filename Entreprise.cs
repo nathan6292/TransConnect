@@ -111,7 +111,7 @@ public class Entreprise
     #region Predicate utilisés pour les saisies
     Predicate<string> IsBool = new Predicate<string>(x => x == "oui" || x == "non");
     Predicate<string> IsDouble = new Predicate<string>(x => double.TryParse(x, out _));
-    Predicate<string> IsInt = new Predicate<string>(x => int.TryParse(x, out _));
+    Predicate<string> IsInt = new Predicate<string>(x => long.TryParse(x, out _));
     Predicate<string> IsDate = new Predicate<string>(x => DateTime.TryParse(x, out _));
     Predicate<string> IsPastDate = new Predicate<string>(x => DateTime.Parse(x) < DateTime.Now);
     Predicate<string> IsMail = new Predicate<string>(x => x.Contains("@"));
@@ -136,31 +136,7 @@ public class Entreprise
     }
 
 
-    /// <summary>
-    /// Supprimer/Licencier un salarié de l'entreprise
-    /// </summary>
-    /// <param name="salarie"></param>
-    public void SupprimerSalarie(Salarie salarie)
-    {
-        if (salarie.IsFeuille())    //Si il est a "au bas de l'échelle", on le supprime simplement
-        {
-            salaries.Remove(salarie);
-            salarie.SuperieurHierachique.InferieurHierachique.Remove(salarie);
-        }
-        else        //Sinon, pour conserver la structure de l'arbre on :
-        {
-            foreach (Salarie s in salarie.InferieurHierachique)
-            {
-                s.SuperieurHierachique = salarie.SuperieurHierachique;  //1. On attribue ses inférieurs à son supérieur  
-                salarie.SuperieurHierachique.InferieurHierachique.Add(s);
-            }
-
-            salarie.SuperieurHierachique.InferieurHierachique.Remove(salarie);    //2. On retire le salarié de la liste des inférieurs de son supérieur
-            salaries.Remove(salarie); //3. On le retire de la liste des salariés
-            salarie = null; //On libère de l'espace mémoire
-
-        }
-    }
+   
 
     /// <summary>
     /// Afficher l'organigramme de l'entreprise
@@ -189,9 +165,10 @@ public class Entreprise
     /// <summary>
     /// Afficher la liste des salariés de l'entreprise
     /// </summary>
-    public void AfficherSalarie()
+    public void AfficherSalarie(List<Salarie> liste = null)
     {
-        foreach (Salarie s in salaries)
+        if (liste == null) liste = salaries;
+        foreach (Salarie s in liste)
         {
             Console.WriteLine(s.ToString() + "\n");
         }
@@ -200,59 +177,36 @@ public class Entreprise
     /// <summary>
     /// Afficher la liste des clients de l'entreprise
     /// </summary>
-    public void AfficherClient()
+    public void AfficherClient(List<Client> liste = null)
     {
-        foreach (Client c in clients)
+        if (liste == null) liste = clients;
+        foreach (Client c in liste)
         {
             Console.WriteLine(c.ToString() + "\n");
         }
     }
 
-    public void AfficherVehicule()
+    public void AfficherVehicule(List<Vehicule> liste = null)
     {
-        foreach (Vehicule v in vehicules)
+        if (liste == null) liste = vehicules;
+        foreach (Vehicule v in liste)
         {
             Console.WriteLine(v.ToString() + "\n");
         }
     }
 
-    public Salarie FindSalarie(string text)
+    public Salarie FindSalarie(string text, List<Salarie> possibilites = null)
     {
-
+        if (possibilites==null) possibilites = salaries;
         bool find = false;
-        Console.WriteLine("Liste des salariés : \n");
-        this.AfficherSalarie();
-        Console.WriteLine("\nVoici la liste des salariés\n");
+        Console.WriteLine("Liste des salariés possibles : \n");
+        AfficherSalarie(possibilites);
+        Console.WriteLine("\nVoici la liste des salariés possibles \n");
         Console.WriteLine("\n\n" + text);
-        while (!find)
-        {
-            string nom = Tools.Saisie("Entrez le nom du salarié que vous cherchez : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le nom ne peut pas être vide" } });
-            List<Salarie> resultat = this.Salaries.FindAll(x => x.Nom == nom);
-            switch (resultat.Count)
-            {
-                case 0:
-                    Console.WriteLine("Aucun salarié trouvé\n\n");
-                    break;
-                case 1:
-                    return resultat[0];
-                default:
-                    Console.WriteLine("\n\nPlusieurs salariés ont le nom " + nom);
-                    string prenom = Tools.Saisie("Entrez le prénom du salarié : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le nom ne peut pas être vide" } });
-                    resultat = resultat.FindAll(x => x.Prenom == prenom);
-                    switch (resultat.Count)
-                    {
-                        case 0:
-                            Console.WriteLine("\nAucun salarié trouvé\n");
-                            break;
-                        case 1:
-                            return resultat[0];
-                    }
-                    break;
-            }
-
-        }
+        Predicate<string> IsIDinPossibilite = new Predicate<string>(x=> possibilites.Exists(y=>y.Id == int.Parse(x)));
+        int inputID = int.Parse(Tools.Saisie("Entrez l'ID du salarié parmi ceux proposés : ", new Dictionary<Predicate<string>, string> { { IsInt, "L'ID n'est pas valide" }, { IsIDinPossibilite, "Cet ID n'est pas dans les choix possibles" } }));
         Console.Clear();
-        return null;
+        return salaries.Find(x=>x.Id == inputID);
     }
 
     public void CreerSalarie()
@@ -262,7 +216,7 @@ public class Entreprise
         DateTime naissance = DateTime.Parse(Tools.Saisie("Entrez la date de naissance du salarié : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" }, { IsPastDate, "La date n'est pas dans le passé" } }));
         string adresse = Tools.Saisie("Entrez l'adresse du salarié : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "L'adresse ne peut pas être vide" } });
         string mail = Tools.Saisie("Entrez l'adresse mail du salarié : ", new Dictionary<Predicate<string>, string> { { IsMail, "L'adresse mail n'est pas valide" } });
-        int telephone = int.Parse(Tools.Saisie("Entrez le numéro de téléphone du salarié : ", new Dictionary<Predicate<string>, string> { { IsInt, "Le numéro de téléphone n'est pas valide" }, { x => x.Length == 10, "Le numéro doit contenir 10 chiffres" } }));
+        long telephone = long.Parse(Tools.Saisie("Entrez le numéro de téléphone du salarié : ", new Dictionary<Predicate<string>, string> { { IsInt, "Le numéro de téléphone n'est pas valide" }, { x => x.Length == 10, "Le numéro doit contenir 10 chiffres" } }));
         bool IsChauffeur = Tools.Saisie("Le salarié est-il un chauffeur ? (Tapez 'oui' ou 'non' en miniscules) : ", new Dictionary<Predicate<string>, string> { { IsBool, "La réponse n'est pas valide" } }) == "oui";
         string poste;
         if (IsChauffeur)
@@ -275,22 +229,63 @@ public class Entreprise
         }
         double salaire = double.Parse(Tools.Saisie("Entrez le salaire du salarié : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le salaire n'est pas valide" }, { IsPositive, "Le salaire ne peut pas être négatif" } }));
         DateTime dateEmbauche = DateTime.Parse(Tools.Saisie("Entrez la date d'embauche du salarié : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" }}));
-        Salarie superieurHierarchique = Salaries[0];       //A modifier pour choisir le supérieur hiérarchique
-        //Modifier les inféieurs hierachiques
         Salarie sup = FindSalarie("Qui est le supérieur hiérarchique de ce nouvel employé ? ");
+        bool inf = Tools.Saisie("Ce salarié a-t-il des inférieurs hiérarchiques ? (Tapez 'oui' ou 'non' en miniscules) : ", new Dictionary<Predicate<string>, string> { { IsBool, "La réponse n'est pas valide" } }) == "oui";
+        List<Salarie> infHier = new List<Salarie>();
+        List<Salarie> possibilites = sup.InferieurHierachique;
+        while (inf)
+        {
+            infHier.Add(FindSalarie("Choisissez l'inférieur hierachique : ", sup.InferieurHierachique));
+            possibilites.Remove(infHier.Last());
+            if (possibilites.Count == 0)
+            {
+                inf = false;
+            }
+            else if (Tools.Saisie("Voulez-vous ajouter un autre inférieur hiérarchique ? (Tapez 'oui' ou 'non' en miniscules) : ", new Dictionary<Predicate<string>, string> { { IsBool, "La réponse n'est pas valide" } }) == "non")
+            {
+                inf = false;
+            }
+        }
         if (poste == "Chauffeur")
         {
             Chauffeur chauffeur = new Chauffeur(0, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, sup, 0);
             sup.InferieurHierachique.Add(chauffeur);
-
+            chauffeur.InferieurHierachique = infHier;
             salaries.Add(chauffeur);
         }
         else
         {
             Salarie salarie = new Salarie(0, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, sup);
             sup.InferieurHierachique.Add(salarie);
-
+            salarie.InferieurHierachique = infHier;
             salaries.Add(salarie);
+        }
+    }
+
+    /// <summary>
+    /// Supprimer/Licencier un salarié de l'entreprise
+    /// </summary>
+    /// <param name="salarie"></param>
+    public void SupprimerSalarie(Salarie salarie)
+    {
+        Salarie vire = FindSalarie("Quel salarié voulez-vous licencier ? ");
+        if (salarie.IsFeuille())    //Si il est a "au bas de l'échelle", on le supprime simplement
+        {
+            salaries.Remove(salarie);
+            salarie.SuperieurHierachique.InferieurHierachique.Remove(salarie);
+        }
+        else        //Sinon, pour conserver la structure de l'arbre on :
+        {
+            foreach (Salarie s in salarie.InferieurHierachique)
+            {
+                s.SuperieurHierachique = salarie.SuperieurHierachique;  //1. On attribue ses inférieurs à son supérieur  
+                salarie.SuperieurHierachique.InferieurHierachique.Add(s);
+            }
+
+            salarie.SuperieurHierachique.InferieurHierachique.Remove(salarie);    //2. On retire le salarié de la liste des inférieurs de son supérieur
+            salaries.Remove(salarie); //3. On le retire de la liste des salariés
+            salarie = null; //On libère de l'espace mémoire
+
         }
     }
 
@@ -305,6 +300,16 @@ public class Entreprise
         clients.Add(new Client(0, p, n, na, a, m, t));
     }
 
+    public void SupprimerClient()
+    {
+        Console.WriteLine("Liste des clients : \n");
+        AfficherClient();
+        Console.WriteLine("\nVoici la liste des clients \n");
+        Console.WriteLine("\n\nQuelle client voulez-vous supprimer");
+        Predicate<string> IsIDinClients = new Predicate<string>(x => clients.Exists(y => y.Id == int.Parse(x)));
+        int inputID = int.Parse(Tools.Saisie("Entrez l'ID du client à supprimer : ", new Dictionary<Predicate<string>, string> { { IsInt, "L'ID n'est pas valide" }, {IsIDinClients, "Cet ID n'est pas dans les choix possibles" } }));
+        clients.Remove(clients.Find(x => x.Id == inputID));
+    }
     #region Lecture/Ecriture de Fichiers
     public void ReadSauvegarde(string path)
     {
@@ -331,14 +336,13 @@ public class Entreprise
         }
         catch { }
     }
+
     public void SaveEntreprise(string path)
     {
         List<string> text = new List<string>();
         text.Add(string.Format("{0},{1},{2},{3}", nom, adresse, mail, telephone));
         File.WriteAllLines(path, text);
     }
-
-    
 
     public void SaveSalarie(string path)
     {
@@ -598,6 +602,7 @@ public class Entreprise
             {
                 try { v.EmploiDuTemps.Add(DateTime.Parse(date)); }
                 catch{  }
+
             }
 
             vehicules.Add(v);

@@ -16,7 +16,7 @@ namespace Projet_TransConnect
         protected DateTime naissance;
         protected string adresse;
         protected string mail;
-        protected int telephone;
+        protected long telephone;
 
         #region accesseurs
         /// <summary>
@@ -73,7 +73,7 @@ namespace Projet_TransConnect
         /// <summary>
         /// Accesseurs en lecture et en écriture du téléphone
         /// </summary>
-        public int Telephone
+        public long Telephone
         {
             get { return telephone; }
             set { telephone = value; }
@@ -90,7 +90,7 @@ namespace Projet_TransConnect
         /// <param name="adresse"></param>
         /// <param name="mail"></param>
         /// <param name="telephone"></param>
-        public Personne(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone)
+        public Personne(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, long telephone)
         {
             if (id == 0)
             {

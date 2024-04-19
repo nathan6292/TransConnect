@@ -73,7 +73,7 @@ namespace Projet_TransConnect
         /// <param name="poste"></param>
         /// <param name="salaire"></param>
         /// <param name="dateEmbauche"></param>
-        public Salarie(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, int telephone, string poste, double salaire, DateTime dateEmbauche, Salarie superieurHierarchique) : base(id, prenom, nom, naissance, adresse, mail, telephone)
+        public Salarie(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, long telephone, string poste, double salaire, DateTime dateEmbauche, Salarie superieurHierarchique) : base(id, prenom, nom, naissance, adresse, mail, telephone)
         {
             this.poste = poste;
             this.dateEmbauche = dateEmbauche;
@@ -93,7 +93,7 @@ namespace Projet_TransConnect
         /// <returns></returns>
         public override string ToString()
         {
-            return base.ToString() + "\nPoste : " + poste + "\nSalaire : " + salaire + "\nDate d'embauche : " + dateEmbauche.ToString("dd/MM/yyyy");
+            return base.ToString() + "\nPoste : " + poste + "\nSalaire : " + salaire + "\nDate d'embauche : " + dateEmbauche.ToString("dd/MM/yyyy") + "\n";
         }
 
         public void ToStringOrganigramme(int tab)
