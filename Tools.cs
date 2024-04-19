@@ -97,6 +97,13 @@ namespace Projet_TransConnect
             }
                     
         }
+
+        public static void EndOfProgram()
+        {
+            Console.WriteLine("Appuyez sur n'importe quelle touche pour revenir au menu...");
+            Console.ReadKey();
+            Console.Clear();
+        }
         
     }
 }

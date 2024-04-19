@@ -10,9 +10,9 @@ namespace Projet_TransConnect
     {
          
 
-        public Client(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, long telephone) : base(id, prenom, nom, naissance, adresse, mail, telephone)
+        public Client(int id, string prenom, string nom, DateTime naissance, string adresse, string mail, string telephone) : base(id, prenom, nom, naissance, adresse, mail, telephone)
         {
-            
+
         }
 
         
