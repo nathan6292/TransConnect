@@ -55,6 +55,36 @@ namespace Projet_TransConnect
             return lines;
         }
 
+        public static string Saisie1(string texte, DictionnaireChainee<Predicate<string>,string> dico)
+{
+    string input = "";
+    bool success = false;
+
+    while (!success)
+    {
+        Console.Write(texte);
+        input = Console.ReadLine();
+        bool error = false;
+        dico.ForEach((Predicate<string> a) =>
+        {
+            if (!error)
+            {
+                if (a(input))
+                {
+                    success = true;
+                }
+                else
+                {
+                    Console.WriteLine(dico.Rechercher(a) + "\n");
+                    success = false;
+                    error = true;
+                }
+            }
+        });
+    }
+    return input;
+}
+
         public static string Saisie(string texte, Dictionary<Predicate<string>,string> dico)
         {
             string input = "";
