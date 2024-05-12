@@ -89,7 +89,7 @@ namespace Projet_TransConnect
 
     public override string ToString()
     {
-        return base.ToString() + "Tarif horaire : " + tarifHoraire + "\n";
+        return base.ToString() + "Tarif horaire : " + tarifHoraire + "\nEmploi du temps : " + EmploiDuTempsToString() + "\n\n";
     }
 
     public string EmploiDuTempsToString()
@@ -100,6 +100,11 @@ namespace Projet_TransConnect
             str += date.ToString("dd/MM/yyyy") + "\n";
         }
         return str;
+    }
+
+    public bool IsDispo(DateTime date)
+    {
+        return !emploiDuTemps.Contains(date);
     }
 }
 }

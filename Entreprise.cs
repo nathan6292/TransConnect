@@ -7,7 +7,7 @@ using TransConnect;
 
 namespace Projet_TransConnect
 {
-public class Entreprise
+    public class Entreprise
 {
     protected string nom;
     protected string adresse;
@@ -17,7 +17,7 @@ public class Entreprise
 
     protected List<Client> clients;
     protected Salarie patron;                           //On considère que le patron est de la classe employé (pour faciliter l'orgranigramme)
-    //protected List<Commande> commandes;
+    protected List<Commande> commandes;
     protected List<Vehicule> vehicules;
 
     #region accesseurs
@@ -69,8 +69,13 @@ public class Entreprise
         set { vehicules = value; }
     }
 
+    public List<Commande> Commandes
+    {
+        get { return commandes; }
+        set { commandes = value; }
+    }
+
     #endregion 
-    //A enlever peut etre ??
 
     public Entreprise(string nom, string adresse, string mail, int telephone, Salarie patron)
     {
@@ -81,6 +86,7 @@ public class Entreprise
         this.salaries = new List<Salarie>();
         this.clients = new List<Client>();
         this.vehicules = new List<Vehicule>();
+        this.commandes = new List<Commande>();
         this.patron = patron;
     }
 
@@ -97,6 +103,7 @@ public class Entreprise
         this.salaries = new List<Salarie>();
         this.clients = new List<Client>();
         this.vehicules = new List<Vehicule>();
+        this.commandes = new List<Commande>();
     }
 
 
@@ -126,7 +133,6 @@ public class Entreprise
             return false;
         }
     });
-
     #endregion
 
     #region Affichage
@@ -178,12 +184,23 @@ public class Entreprise
     /// <summary>
     /// Afficher la liste des clients de l'entreprise
     /// </summary>
-    public void AfficherClient(List<Client> liste = null)
+    public void AfficherClient(List<Client> liste = null, Comparison<Client> compare = null)
     {
         if (liste == null) liste = clients;
+        liste.Sort(compare);
         foreach (Client c in liste)
         {
-            Console.WriteLine(c.ToString() + "\n");
+            Console.Write(c.ToString() + "\n");
+            Console.WriteLine("Montant total des achats : " + AchatCumules(c) + "\n\n");
+        }
+    }
+
+    public double AchatCumules(Client c)
+    {
+        if (commandes.FindAll(com => com.Client == c).Count == 0) return 0;
+        else
+        {
+            return commandes.FindAll(com => com.Client == c).Sum(com => com.Prix);
         }
     }
 
@@ -193,6 +210,15 @@ public class Entreprise
         foreach (Vehicule v in liste)
         {
             Console.WriteLine(v.ToString() + "\n");
+        }
+    }
+
+    public void AfficherCommande(List<Commande> liste = null)
+    {
+        if (liste == null) liste = commandes;
+        foreach (Commande c in liste)
+        {
+            Console.WriteLine(c.ToString() + "\n");
         }
     }
 
@@ -364,14 +390,9 @@ public class Entreprise
 
     public void SupprimerClient()
     {
-        Console.WriteLine("Liste des clients : \n");
-        AfficherClient();
-        Console.WriteLine("\nVoici la liste des clients \n");
-        Console.WriteLine("\n\nQuelle client voulez-vous supprimer");
-        Predicate<string> IsIDinClients = new Predicate<string>(x => clients.Exists(y => y.Id == int.Parse(x)));
-        int inputID = int.Parse(Tools.Saisie("Entrez l'ID du client à supprimer : ", new Dictionary<Predicate<string>, string> { { IsInt, "L'ID n'est pas valide" }, {IsIDinClients, "Cet ID n'est pas dans les choix possibles" } }));
-
-        clients.Remove(clients.Find(x => x.Id == inputID));
+        Client c = FindClient("Quelle client voulez-vous supprimer : ");
+        clients.Remove(c);
+        commandes.FindAll(commande => commande.Client == c).ForEach(commande => DeleteCommande(commande));
     }
 
     public void ModifierClient()
@@ -414,20 +435,193 @@ public class Entreprise
         Tools.EndOfProgram();
     }
 
+    public Client FindClient(string text)
+    {
+        bool find = false;
+        Console.WriteLine("Liste des clients possibles : \n");
+        AfficherClient();
+        Console.WriteLine("\nVoici la liste des clients possibles :\n");
+        Console.WriteLine("\n\n" + text);
+        Predicate<string> IsIDinClients = new Predicate<string>(x => clients.Exists(c => c.Id == int.Parse(x)));
+        int inputID = int.Parse(Tools.Saisie("Entrez l'ID du client parmi ceux proposés : ", new Dictionary<Predicate<string>, string> { { IsInt, "L'ID n'est pas valide" }, { IsIDinClients, "Cet ID n'est pas dans les choix possibles" } }));
+        Console.Clear();
+        return clients.Find(x => x.Id == inputID);
+    }
+    #endregion
+
+    #region Créer/Supprimer Vehicule
+
+    public void CreerVehicule()
+    {
+        Console.WriteLine("Quelle est le tye du véhicule :\nVoiture (Tapez 1)\nCamionette(Tapez 2)\nCamion Benne (Tapez 3)\nCamion citerne(Tapez 4)\nCamion frigorifique(Tapez 5)\n\n");
+        int type = int.Parse(Tools.Saisie("Entrez le numéro correspondant au type de véhicule : ", new Dictionary<Predicate<string>, string> { { x => int.Parse(x) >= 1 && int.Parse(x) <= 5, "Le numéro n'est pas valide" } }));
+        Console.Clear();
+
+        string marque = Tools.Saisie("Entrez la marque du véhicule : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "La marque ne peut pas être vide" } });
+        string modele = Tools.Saisie("Entrez le modèle du véhicule : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le modèle ne peut pas être vide" } });
+        string immatriculation = Tools.Saisie("Entrez le numéro d'immatriculation du véhicule : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le numéro d'immatriculation ne peut pas être vide" } });
+        int annee = int.Parse(Tools.Saisie("Entrez l'année de mise en circulation du véhicule : ", new Dictionary<Predicate<string>, string> { { IsInt, "L'année n'est pas valide" }, { x => int.Parse(x) <= DateTime.Now.Year, "L'année ne peut pas être dans le futur" } }));
+        double prix = double.Parse(Tools.Saisie("Entrez le prix de location du véhicule : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le prix n'est pas valide" }, { IsPositive, "Le prix ne peut pas être négatif" } }));
+        switch (type)
+        {
+            case 1:
+                int nbplaces = int.Parse(Tools.Saisie("Entrez le nombre de places du véhicule : ", new Dictionary<Predicate<string>, string> { { IsInt, "Le nombre de places n'est pas valide" }, { IsPositive, "Le nombre de places ne peut pas être négatif" } }));
+                vehicules.Add(new Voiture(immatriculation, marque, modele, annee, prix, nbplaces));
+                break;
+            case 2:
+                double volume = double.Parse(Tools.Saisie("Entrez le volume du véhicule : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le volume n'est pas valide" }, { IsPositive, "Le volume ne peut pas être négatif" } }));
+                string usage = Tools.Saisie("Entrez l'usage du véhicule : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "L'usage ne peut pas être vide" } });
+                vehicules.Add(new Camionette(immatriculation, marque, modele, annee, prix, volume, usage));
+                break;
+            case 3:
+                double poids = double.Parse(Tools.Saisie("Entrez le poids du véhicule : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le poids n'est pas valide" }, { IsPositive, "Le poids ne peut pas être négatif" } }));
+                double volume1 = double.Parse(Tools.Saisie("Entrez le volume du véhicule : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le volume n'est pas valide" }, { IsPositive, "Le volume ne peut pas être négatif" } }));
+                int nbBenne = int.Parse(Tools.Saisie("Entrez le nombre de bennes du véhicule : ", new Dictionary<Predicate<string>, string> { { IsInt, "Le nombre de bennes n'est pas valide" }, { IsPositive, "Le nombre de bennes ne peut pas être négatif" } }));
+                bool grue = Tools.Saisie("Le camion benne est-il équipé d'une grue ? (Tapez 'oui' ou 'non' en miniscules) : ", new Dictionary<Predicate<string>, string> { { IsBool, "La réponse n'est pas valide" } }) == "oui";
+                vehicules.Add(new CamionBenne(immatriculation, marque, modele, annee, prix, poids, volume1, nbBenne, grue));
+                break;
+            case 4:
+                double poids1 = double.Parse(Tools.Saisie("Entrez le poids du véhicule : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le poids n'est pas valide" }, { IsPositive, "Le poids ne peut pas être négatif" } }));
+                double volume2 = double.Parse(Tools.Saisie("Entrez le volume du véhicule : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le volume n'est pas valide" }, { IsPositive, "Le volume ne peut pas être négatif" } }));
+                string typeCuve = Tools.Saisie("Entrez le type de cuve du véhicule : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le type de cuve ne peut pas être vide" } });
+                vehicules.Add(new CamionCiterne(immatriculation, marque, modele, annee, prix, poids1, volume2, typeCuve));
+                break;
+            case 5:
+                double poids2 = double.Parse(Tools.Saisie("Entrez le poids du véhicule : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le poids n'est pas valide" }, { IsPositive, "Le poids ne peut pas être négatif" } }));
+                double volume3 = double.Parse(Tools.Saisie("Entrez le volume du véhicule : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le volume n'est pas valide" }, { IsPositive, "Le volume ne peut pas être négatif" } }));
+                int nbGrpElectrogene = int.Parse(Tools.Saisie("Entrez le nombre de groupes électrogènes du véhicule : ", new Dictionary<Predicate<string>, string> { { IsInt, "Le nombre de groupes électrogènes n'est pas valide" }, { IsPositive, "Le nombre de groupes électrogènes ne peut pas être négatif" } }));
+                vehicules.Add(new CamionFrigorifique(immatriculation, marque, modele, annee, prix, poids2, volume3, nbGrpElectrogene));
+                break;
+        }
+    }
+
+    public Vehicule FindVehicule(string text, List<Vehicule> possibilites = null)
+    {
+        if (possibilites == null) possibilites = vehicules;
+        Console.WriteLine("Liste des véhicules possibles : \n");
+        AfficherVehicule(possibilites);
+        Console.WriteLine("\nVoici la liste des véhicules possibles :\n");
+        Console.WriteLine("\n\n" + text);
+        Predicate<string> IsImmatInVehicules = new Predicate<string>(x => possibilites.Exists(c => c.Immatriculation == x));
+        string immat = Tools.Saisie("Entrez le numéro d'immatriculation du véhicule parmi ceux proposés : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le numéro d'immatriculation ne peut pas être vide" }, { IsImmatInVehicules, "Cet numéro d'immatriculation n'est pas dans les choix possibles" } });
+        Console.Clear();
+        return vehicules.Find(x=> x.Immatriculation == immat);
+    }
+
+    #endregion
+
+    #region Créer/Modifier/Supprimer Commande
+
+    public void CreerCommande()
+    {
+        Console.WriteLine("Quel client a commandé : \n");
+        Client client = FindClient("Quelle client a effectué la commande : ");
+        //A modif
+        string depart = Tools.Saisie("Entrez le lieu de départ de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu de départ ne peut pas être vide" } });
+        string arrivee = Tools.Saisie("Entrez le lieu d'arrivée de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu d'arrivée ne peut pas être vide" } });
+        //Fin a modif
+
+        DateTime date = DateTime.Parse(Tools.Saisie("Entrez la date de la commande : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" }}));
+        double prix = double.Parse(Tools.Saisie("Entrez le prix facturé pour la commande : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le prix n'est pas valide" }, { IsPositive, "Le prix ne peut pas être négatif" } }));
+
+        string desscription = Tools.Saisie("Entrez la description de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "La description ne peut pas être vide" } });
+
+        List<Salarie> ChauffeurPossible = salaries.FindAll(s =>
+        {
+            if (s is Chauffeur c) return c.IsDispo(date);
+            else return false;
+        });
+        Chauffeur chauffeur = (Chauffeur)FindSalarie("Quel chauffeur va effectué la commande parmi ceux disponible le " + date.ToString("dd/MM/yyyy") + " : ", ChauffeurPossible);
+
+
+        List<Vehicule> VehiculePossible = vehicules.FindAll(v => v.IsDispo(date));
+        Vehicule vehicule = FindVehicule("Quel véhicule va effectué la commande parmi ceux disponible le " + date.ToString("dd/MM/yyyy") + " : ", VehiculePossible);
+
+        Commande commande = new Commande(this, client, chauffeur, vehicule, depart, arrivee, date, prix, desscription);
+
+        commandes.Add(commande);
+
+    }
+
+    public Commande FindCommande(string text, List<Commande> possibilites = null)
+    {
+        if (possibilites == null) possibilites = commandes;
+        Console.WriteLine("Liste des commandes possibles : \n");
+        AfficherCommande(possibilites);
+        Console.WriteLine("\nVoici la liste des commandes possibles :\n");
+        Console.WriteLine("\n\n" + text);
+        Predicate<string> IsIdInCommande = new Predicate<string>(x => possibilites.Exists(c => c.Id == int.Parse(x)));
+        int id = int.Parse(Tools.Saisie("Entrez l'ID de la commande parmi ceux proposés : ", new Dictionary<Predicate<string>, string> { { IsInt, "L'ID n'est pas valide" }, { IsIdInCommande, "Cet ID n'est pas dans les choix possibles" } }));
+        Console.Clear();
+        return commandes.Find(x => x.Id == id);
+    }
+
+    public void SupprimerCommande()
+    {
+        Commande c = FindCommande("Quelle commande voulez-vous supprimer : ");
+        DeleteCommande(c);
+    }
+
+    public void DeleteCommande(Commande c)
+    {
+        commandes.Remove(c);
+        c.Chauffeur.EmploiDuTemps.Remove(c.Date);
+        c.Vehicule.EmploiDuTemps.Remove(c.Date);
+    }
+
+    #endregion
+
+    #region Statistiques
+
+    public void AfficherNblivraisonParChauffeur()
+    {
+        List<Salarie> chauffeurs = salaries.FindAll(s => s is Chauffeur);
+        chauffeurs.Sort((Salarie a, Salarie b) => NbCommandeChauffeur(b).CompareTo(NbCommandeChauffeur(a)));
+        foreach(Salarie s in chauffeurs)
+        {
+            Console.WriteLine(s.ToString() + "Nombres de livraisons : " + NbCommandeChauffeur(s) + "\n\n");
+        }
+    }
+
+    public int NbCommandeChauffeur(Salarie chauffeur)
+    {
+        if (chauffeur is not Chauffeur) return 0;
+        else return commandes.Count(c => c.Chauffeur == chauffeur);
+    }
+
+    public void AfficherCommandeEntreDates(DateTime inf, DateTime sup)
+    {
+        List<Commande> CommmandesAafficher = commandes.FindAll(c => c.Date >= inf && c.Date <= sup);
+        AfficherCommande(CommmandesAafficher);
+    }
+
+    public double MoyennePrixCommande()
+    {
+        return commandes.Average(c => c.Prix);
+    }
+
+    public double MoyenneCompteClient()
+    {
+        return clients.Select(client => AchatCumules(client)).Average();
+    }
+
+    public void AffciherCommandeClient(Client c)
+    {
+        AfficherCommande(commandes.FindAll(com=>com.Client==c));
+    }
+
+
     #endregion
 
     #region Lecture/Ecriture de Fichiers
     public void ReadSauvegarde(string path)
     {
-        try
-        {
             ReadClient(path + "\\Clients.csv");
             ReadChauffeur(path + "\\Chauffeur.csv");
             ReadSalarie(path + "\\Salaries.csv");
             ReadRelation(path + "\\Relations.csv");
             ReadVehicule(path + "\\Vehicules.csv");
-        }
-        catch { }
+            ReadCommande(path + "\\Commandes.csv");
     }
 
     public void WriteSauvegarde(string path)
@@ -440,8 +634,11 @@ public class Entreprise
             SaveRelation(path + "\\Relations.csv");
             SaveVehicule(path + "\\Vehicules.csv");
             SaveEntreprise(path + "\\Entreprise.csv");
+
         }
+
         catch { }
+        SaveCommande(path + "\\Commandes.csv");
     }
 
     public void SaveEntreprise(string path)
@@ -480,10 +677,6 @@ public class Entreprise
                                              salarie.Naissance, salarie.Adresse, salarie.Mail,
                                              salarie.Telephone, salarie.Poste, salarie.Salaire,
                                              salarie.DateEmbauche.ToString("dd/MM/yyyy"), c.TarifHoraire);
-                foreach (DateTime date in c.EmploiDuTemps)
-                {
-                    line += "," + date.ToString("dd/MM/yyyy");
-                }
                 text.Add(line);
             }
         }
@@ -493,6 +686,7 @@ public class Entreprise
     public void ReadSalarie(string path)
     {
         string[] lignes = File.ReadAllLines(path);
+        if (lignes.Length == 0) return;
         foreach (string ligne in lignes)
         {
             string[] elements = ligne.Split(',');
@@ -520,7 +714,7 @@ public class Entreprise
     public void ReadChauffeur(string path)
     {
         string[] lignes = File.ReadAllLines(path);
-
+        if (lignes.Length == 0) return;
         foreach (string ligne in lignes)
         {
             string[] elements = ligne.Split(',');
@@ -539,12 +733,6 @@ public class Entreprise
 
             // Créer un objet Chauffeur et l'ajouter à la liste
             Chauffeur chauffeur = new Chauffeur(id, prenom, nom, naissance, adresse, mail, telephone, poste, salaire, dateEmbauche, null, tarifHoraire);
-
-            // Ajouter les dates d'emploi du temps si elles sont disponibles
-            for (int i = 11; i < elements.Length; i++)
-            {
-                chauffeur.EmploiDuTemps.Add(DateTime.Parse(elements[i]));
-            }
 
             salaries.Add(chauffeur);
         }
@@ -570,8 +758,9 @@ public class Entreprise
 
     public void ReadRelation(string path)
     {
-        string[] text = File.ReadAllLines(path);
 
+        string[] text = File.ReadAllLines(path);
+        if (text.Length == 0) return;
         foreach (string line in text)
         {
             string[] content = line.Split(',');
@@ -601,6 +790,7 @@ public class Entreprise
     public void ReadClient(string path)
     {
         string[] lignes = File.ReadAllLines(path);
+        if (lignes.Length == 0) return;
         foreach (string ligne in lignes)
         {
             string[] elements = ligne.Split(',');
@@ -630,6 +820,7 @@ public class Entreprise
             line.Add(vehicule.Marque);
             line.Add(vehicule.Modele);
             line.Add(vehicule.Annee.ToString());
+            line.Add(vehicule.Prix.ToString());
 
             switch (vehicule)
             {
@@ -666,11 +857,6 @@ public class Entreprise
 
             text.Add(string.Join(",", line));
             line.Clear();
-            foreach(DateTime date in vehicule.EmploiDuTemps)
-            {
-                line.Add(date.ToString("dd/MM/yyyy"));
-            }
-            text.Add(string.Join(",", line));
         }
 
         File.WriteAllLines(path, text);
@@ -679,40 +865,78 @@ public class Entreprise
     public void ReadVehicule(string path)
     {
         string[] lines = File.ReadAllLines(path);
-
-        for (int i = 0; i < lines.Length; i += 2)
+        if (lines.Length == 0) return;
+        for (int i = 0; i < lines.Length; i ++)
         {
             Vehicule v = null;
             string[] line = lines[i].Split(',');
-            string[] dates = lines[i + 1].Split(',');
 
             switch (line[0])
             {
                 case "Voiture":
-                    v = new Voiture(line[1], line[2], line[3], int.Parse(line[4]), int.Parse(line[5]));
+                    v = new Voiture(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]),int.Parse(line[6]));
                     break;
                 case "Camionette":
-                    v = new Camionette(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), line[6]);
+                    v = new Camionette(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), line[7]);
                     break;
                 case "CamionFrigorifique":
-                    v = new CamionFrigorifique(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), int.Parse(line[7]));
+                    v = new CamionFrigorifique(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), double.Parse(line[7]), int.Parse(line[8]));
                     break;
                 case "CamionBenne":
-                    v = new CamionBenne(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), int.Parse(line[7]), bool.Parse(line[8]));
+                    v = new CamionBenne(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), double.Parse(line[7]), int.Parse(line[8]), bool.Parse(line[9]));
                     break;
                 case "CamionCiterne":
-                    v = new CamionCiterne(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), line[7]);
+                    v = new CamionCiterne(line[1], line[2], line[3], int.Parse(line[4]), double.Parse(line[5]), double.Parse(line[6]), double.Parse(line[7]), line[8]);
                     break;
             }
-
-            foreach (string date in dates)
-            {
-                try { v.EmploiDuTemps.Add(DateTime.Parse(date)); }
-                catch{  }
-
-            }
-
             vehicules.Add(v);
+        }
+    }
+
+    public void SaveCommande(string path)
+    {
+        List<string> text = new List<string>();
+
+        foreach(Commande c in commandes)
+        {
+            List<string> line = new List<string>();
+            line.Add(c.Id.ToString());
+            line.Add(c.Client.Id.ToString());
+            line.Add(c.Chauffeur.Id.ToString());
+            line.Add(c.Vehicule.Immatriculation);
+            line.Add(c.Depart);
+            line.Add(c.Arrivee);
+            line.Add(c.Date.ToString("dd/MM/yyyy"));
+            line.Add(c.Prix.ToString());
+            line.Add(c.Description);
+
+            text.Add(string.Join(",", line));
+
+        }
+        File.WriteAllLines(path, text);
+    }
+
+    public void ReadCommande(string path)
+    {
+        string[] lines = File.ReadAllLines(path);
+
+        if (lines.Length == 0) return;
+        foreach (string line in lines)
+        {
+            string[] elements = line.Split(',');
+
+            int id = int.Parse(elements[0]);
+            Client client = clients.Find(x => x.Id == int.Parse(elements[1]));
+            Chauffeur chauffeur = (Chauffeur)salaries.Find(x => x.Id == int.Parse(elements[2]));
+            Vehicule vehicule = vehicules.Find(x => x.Immatriculation == elements[3]);
+            string depart = elements[4];
+            string arrivee = elements[5];
+            DateTime date = DateTime.Parse(elements[6]);
+            double prix = double.Parse(elements[7]);
+            string description = elements[8];
+
+            Commande c = new Commande(this, client, chauffeur, vehicule, depart, arrivee, date, prix, description);
+            commandes.Add(c);
         }
     }
 

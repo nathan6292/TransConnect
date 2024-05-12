@@ -126,6 +126,8 @@ namespace Projet_TransConnect
         return results;
     }
 
+
+
     public void ForEach(Action<T> action)
     {
         NoeudDico<T, U> current = tete;

@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace TransConnect{
     public class CamionFrigorifique : PoidsLourd
+{
+    protected int nbGrpElectrogene;
+
+    #region accesseurs
+
+    public int NbGrpElectrogene
     {
-        protected int nbGrpElectrogene;
-
-        #region accesseurs
-
-        public int NbGrpElectrogene
-        {
-            get { return nbGrpElectrogene; }
-        }
-
-        #endregion
-
-        public CamionFrigorifique(string immatriculation, string marque, string modele, int annee, double poids, double volume, int NbGrpElectrogene) : base(immatriculation, marque, modele, annee, poids, volume)
-        {
-            this.nbGrpElectrogene = NbGrpElectrogene;
-        }
-
-        public override string ToString()
-        {
-            return base.ToString() + "Nombre de groupe électrogène : " + nbGrpElectrogene + "\n";
-        }
+        get { return nbGrpElectrogene; }
     }
+
+    #endregion
+
+    public CamionFrigorifique(string immatriculation, string marque, string modele, int annee, double prix, double poids, double volume, int NbGrpElectrogene) : base(immatriculation, marque, modele, annee, prix, poids, volume)
+    {
+        this.nbGrpElectrogene = NbGrpElectrogene;
+    }
+
+    public override string ToString()
+    {
+        return base.ToString() + "Nombre de groupe électrogène : " + nbGrpElectrogene + "\n";
+    }
+}
     
 }
