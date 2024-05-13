@@ -6,26 +6,32 @@ using Newtonsoft.Json.Linq;
 using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
 using Projet_TransConnect;
+
 namespace TransConnect{
-    class Program{
+
+    class Program
+    {
         static void Main(string[] args){
 
-             
-            
         //Console.WriteLine("test");
-        double[] startCoordinates = { 7.25, 43.7 };
-        double[] endCoordinates = { 2.333333, 48.866667 };
+        double[] startCoordinates = { 2.333333, 48.866667 };
+        double[] endCoordinates = { -0.56667,44.833328};
         //Tools.ReadCSV("Distance.csv");
-        //Tools.GetTravelDuration(startCoordinates,endCoordinates);
 
         Entreprise TransConnect = new Entreprise("Sauvegarde");
         TransConnect.ReadSauvegarde("Sauvegarde");
 
-        TransConnect.Commandes[0].SendFacture("Facture.pdf");
+
+        Arbre graphe = new Arbre();
+        graphe.InitiateGraphe();
+        graphe.ToString();
+        Console.Write(graphe.ToString());
         Console.ReadKey();
         Console.Clear();
 
-        TransConnect.WriteSauvegarde("Sauvegarde");
+        graphe.Shortest_Path("Angers", "Toulouse");
+
+        //TransConnect.WriteSauvegarde("Sauvegarde");
         }
     }
 }

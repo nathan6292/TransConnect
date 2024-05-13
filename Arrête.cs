@@ -23,5 +23,25 @@ namespace Projet_TransConnect
         {
             return "Start : " + this.Start.GetName() + " End : " + this.End.GetName() + " Distance : " + this.distance + " Time : " + this.time;
         }
+
+        public Node GetStart()
+        {
+            return this.Start;
+        }
+
+        public Node GetEnd()
+        {
+            return this.End;
+        }
+
+        public double GetDistance()
+        {
+            return this.distance;
+        }
+
+        public double GetTime()
+        {
+            return this.time;
+        }
     }
 }

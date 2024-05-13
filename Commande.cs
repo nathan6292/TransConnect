@@ -194,7 +194,7 @@ namespace Projet_TransConnect
         message.From = new MailAddress("mr.dupond.transconnect@gmail.com");
 
         // Définir l'adresse e-mail du destinataire
-        message.To.Add("valentin.dugay@edu.devinci.fr");
+        message.To.Add("nathan.fleury@edu.devinci.fr");
 
         // Définir l'objet de l'e-mail
         message.Subject = "Votre facture";

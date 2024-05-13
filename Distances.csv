@@ -1,14 +1,15 @@
-﻿Paris;Rouen;133;1h45
-Paris;Lyon;464;4h55
-Paris;Angers;294;3h11
-Angers;La Rochelle;187;2h20
-La Rochelle;Bordeaux;183;1h38
-Bordeaux;Biarritz;202;1h47
-Biarritz;Toulouse;309;2h39
-Pau;Toulouse;193;1h41
-Toulouse;Nimes;289;2h26
-Montpellier;Nimes;52;35mn
-Nimes;Marseille;126;1h13
-Marseille;Avignon;99;1h00
-Monaco;Marseille;224;2h3
-Toulon;Monaco;169;1h35
+﻿Paris;Rouen;133;105
+Rouen;Paris;133;105
+Paris;Lyon;464;295
+Paris;Angers;294;191
+Angers;La Rochelle;187;140
+La Rochelle;Bordeaux;183;98
+Bordeaux;Biarritz;202;107
+Biarritz;Toulouse;309;159
+Pau;Toulouse;193;101
+Toulouse;Nimes;289;146
+Montpellier;Nimes;52;35
+Nimes;Marseille;126;73
+Marseille;Avignon;99;60
+Monaco;Marseille;224;123
+Toulon;Monaco;169;95
