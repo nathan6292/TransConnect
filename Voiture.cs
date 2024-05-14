@@ -4,26 +4,43 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TransConnect{
-    public class Voiture : Vehicule
+namespace Projet_TransConnect
 {
+    public class Voiture : Vehicule, IsToString
+    {
     protected int nbPlaces;
 
-    #region accesseurs
+        #region accesseurs
 
-    public int NbPlaces
+        /// <summary>
+        /// Acceseurs en lecture de nbPlaces
+        /// </summary>
+        public int NbPlaces
     {
         get { return nbPlaces; }
     }
 
-    #endregion
+        #endregion
 
-    public Voiture(string immatriculation, string marque, string modele, int annee, double prix,int nbPlaces) : base(immatriculation, marque, modele, annee,prix)
+        /// <summary>
+        /// Constructeyr de la classe Voiture
+        /// </summary>
+        /// <param name="immatriculation"></param>
+        /// <param name="marque"></param>
+        /// <param name="modele"></param>
+        /// <param name="annee"></param>
+        /// <param name="prix"></param>
+        /// <param name="nbPlaces"></param>
+        public Voiture(string immatriculation, string marque, string modele, int annee, double prix,int nbPlaces) : base(immatriculation, marque, modele, annee,prix)
     {
         this.nbPlaces = nbPlaces;
     }
 
-    public override string ToString()
+        /// <summary>
+        /// Afficher les informations de la voiture
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
     {
         return base.ToString() + "Nombre de places : " + nbPlaces + "\n";
     }

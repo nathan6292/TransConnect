@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Projet_TransConnect
 {
-    public class Personne
-{
+    public class Personne : IsToString
+    {
     private List<int> IDexisant = new List<int>();     //Permet de générer  atomatiquement un ID, qui s'incrémente à chaque création d'un objet (donc est unique)
 
     protected int id;

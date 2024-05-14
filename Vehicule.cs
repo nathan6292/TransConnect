@@ -4,54 +4,83 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TransConnect{
-    public abstract class Vehicule
+namespace Projet_TransConnect
 {
+    public abstract class Vehicule : IsToString
+    {
     private static List<string> ListImmat = new List<string>();
     protected string immatriculation;
     protected string marque;
     protected string modele;
     protected int annee;
     protected double prix;
-    protected List<DateTime> emploiDuTemps;     
+    protected List<DateTime> emploiDuTemps;
 
-    #region accesseurs
+        #region accesseurs
 
-    public string Immatriculation
+        /// <summary>
+        /// Accesseur de l'immatriculation en lecture seule
+        /// </summary>
+        public string Immatriculation
     {
         get { return immatriculation; }
     }
 
-    public string Marque
+        /// <summary>
+        /// Accesseur de la marque en lecture seule
+        /// </summary>
+        public string Marque
     {
         get { return marque; }
     }
 
-    public string Modele
+        /// <summary>
+        /// Accesseur du modèle en lecture seule
+        /// </summary>
+        public string Modele
     {
         get { return modele; }
     }
 
-    public int Annee
+        /// <summary>
+        /// Accesseur de l'année en lecture seule
+        /// </summary>
+
+        public int Annee
     {
         get { return annee; }
     }
 
-    public List<DateTime> EmploiDuTemps
+        /// <summary>
+        /// Accesseur de l'emploi du temps en lecture et écriture
+        /// </summary>
+        public List<DateTime> EmploiDuTemps
     {
         get { return emploiDuTemps; }
         set { emploiDuTemps = value; }
     }
 
-    public double Prix
+        /// <summary>
+        /// Accesseur du prix en lecture et écriture
+        ///        /// </summary>
+        /// </summary>
+        public double Prix
     {
         get { return prix; }
         set { prix = value; }
     }
 
-    #endregion
+        #endregion
 
-    public Vehicule(string immatriculation, string marque, string modele, int annee, double prix)
+        /// <summary>
+        /// Constructeur de la classe Vehicule
+        /// </summary>
+        /// <param name="immatriculation"></param>
+        /// <param name="marque"></param>
+        /// <param name="modele"></param>
+        /// <param name="annee"></param>
+        /// <param name="prix"></param>
+        public Vehicule(string immatriculation, string marque, string modele, int annee, double prix)
     {
         if (ListImmat.Contains(immatriculation))
         {
@@ -70,7 +99,11 @@ namespace TransConnect{
         emploiDuTemps = new List<DateTime>();
     }
 
-    public override string ToString()
+        /// <summary>
+        /// Afficher les informations du véhicule
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
     {
         string type="";
         switch (this.GetType().Name)
@@ -94,7 +127,11 @@ namespace TransConnect{
         return "Type : " + type + "\nImmatriculation : " + immatriculation + "\nMarque : " + marque + "\nModèle : " + modele + "\nAnnée : " + annee + "\nPrix : " + prix + "\n";
     }
 
-    public string EmploiDuTempsToString()
+        /// <summary>
+        /// Afficher l'emploi du temps du véhicule
+        /// </summary>
+        /// <returns></returns>
+        public string EmploiDuTempsToString()
     {
         string str = "";
         foreach (DateTime date in emploiDuTemps)
@@ -104,6 +141,11 @@ namespace TransConnect{
         return str;
     }
 
+        /// <summary>
+        /// Renvoie si le vehicule est dispo à une date donnée
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
     public bool IsDispo(DateTime date)
     {
         return !emploiDuTemps.Contains(date);

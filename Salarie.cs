@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Projet_TransConnect
 {
-    public class Salarie : Personne
-{
+    public class Salarie : Personne, IsToString
+    {
     protected string poste;
     protected double salaire;
     protected DateTime dateEmbauche;
@@ -82,7 +82,11 @@ namespace Projet_TransConnect
         this.InferieurHierachique = new List<Salarie>();
     }
 
-    public void AjouterInferieur(Salarie salarie)
+        /// <summary>
+        /// Ajoute un salarié à la liste des inférieurs hiérarchiques
+        /// </summary>
+        /// <param name="salarie"></param>
+        public void AjouterInferieur(Salarie salarie)
     {
         inferieurHierachique.Add(salarie);
     }
@@ -96,7 +100,11 @@ namespace Projet_TransConnect
         return base.ToString() + "\nPoste : " + poste + "\nSalaire : " + salaire + "\nDate d'embauche : " + dateEmbauche.ToString("dd/MM/yyyy") + "\n";
     }
 
-    public void ToStringOrganigramme(int tab)
+        /// <summary>
+        /// Affiche les informations de l'employé pour l'ograngramme (informations plus synthétiques)
+        /// </summary>
+        /// <param name="tab"></param>
+        public void ToStringOrganigramme(int tab)
     {
         for (int i = 0; i < tab; i++)
         {
@@ -110,14 +118,21 @@ namespace Projet_TransConnect
         Console.WriteLine("Poste : " + poste);
     }
 
-    // Propriétés pour l'abre n-aire
-
-    public bool IsFeuille()
+        /// <summary>
+        /// Renvoie si l'employé est une feuille de l'arbre hiérarchique ou non
+        /// </summary>
+        /// <returns></returns>
+        public bool IsFeuille()
     {
         return inferieurHierachique.Count == 0;
     }
 
-    public string GetName()
+        /// <summary>
+        /// Renvoie le nom complet de l'employé
+        /// </summary>
+        /// <returns></returns>
+
+        public string GetName()
         {
             return nom + ", " + prenom;
         }

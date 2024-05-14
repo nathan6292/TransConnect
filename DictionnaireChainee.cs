@@ -5,11 +5,18 @@ using System.Threading.Tasks;
 
 namespace Projet_TransConnect
 {
-    public class DictionnaireChainee<T,U>
-{
+    public class DictionnaireChainee<T,U> : IsToString
+    {
     private NoeudDico<T,U> tete;
 
-    public DictionnaireChainee(NoeudDico<T, U> element1, NoeudDico<T, U> element2 = null, NoeudDico<T, U> element3 = null, NoeudDico<T,U> element4 = null)
+        /// <summary>
+        /// Constructeur de la classe DictionnaireChainee
+        /// </summary>
+        /// <param name="element1"></param>
+        /// <param name="element2"></param>
+        /// <param name="element3"></param>
+        /// <param name="element4"></param>
+        public DictionnaireChainee(NoeudDico<T, U> element1, NoeudDico<T, U> element2 = null, NoeudDico<T, U> element3 = null, NoeudDico<T,U> element4 = null)
     {
         tete = element1;
         if (element2!=null) tete.Suivant = element2;
@@ -17,14 +24,21 @@ namespace Projet_TransConnect
         if (element4!=null) element3.Suivant = element4;
     }
 
-    public override string ToString()
+        /// <summary>
+        /// Affiche le contenu du dictionnaire
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
     {
         string text = "";
         ForEach((T) => text+= "Key : " + T.ToString() + "\nValue : " + Rechercher(T).ToString() + "\n\n\n");
         return text; 
     }
-
-    public void Ajouter(NoeudDico<T,U> element)
+        /// <summary>
+        /// Ajoute un élément à la fin du dictionnaire
+        /// </summary>
+        /// <param name="element"></param>
+        public void Ajouter(NoeudDico<T,U> element)
     {
         NoeudDico<T,U> temp = tete;
         while (temp.Suivant != null)
@@ -34,7 +48,12 @@ namespace Projet_TransConnect
         temp.Suivant = element;
     }
 
-    public void Permuter(T key1, T key2)
+        /// <summary>
+        /// Permet de permuter deux éléments du dictionnaire
+        /// </summary>
+        /// <param name="key1"></param>
+        /// <param name="key2"></param>
+        public void Permuter(T key1, T key2)
     {
         NoeudDico<T, U> previous1 = null;
         NoeudDico<T, U> previous2 = null;
@@ -78,8 +97,11 @@ namespace Projet_TransConnect
         current2.Suivant = temp;
     }
 
-
-    public void Supprimer(T key)
+        /// <summary>
+        /// Supprime un élément du dictionnaire
+        /// </summary>
+        /// <param name="key"></param>
+        public void Supprimer(T key)
     {
         NoeudDico<T,U> temp = tete;
         NoeudDico<T,U> temp2 = tete;
@@ -91,7 +113,12 @@ namespace Projet_TransConnect
         temp2.Suivant = temp.Suivant;
     }
 
-    public U Rechercher(T key)
+        /// <summary>
+        /// Recherche la value associée à une key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public U Rechercher(T key)
     {
         NoeudDico<T,U> temp = tete;
         while (temp.Key.Equals(key) == false)
@@ -101,7 +128,12 @@ namespace Projet_TransConnect
         return temp.Value;
     }
 
-    public DictionnaireChainee<T,U> FindAll(Predicate<T> match)
+        /// <summary>
+        /// Reecriture de la méthode FindALL 
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
+        public DictionnaireChainee<T,U> FindAll(Predicate<T> match)
     {
         DictionnaireChainee<T,U> results = new DictionnaireChainee<T,U>(null);
 
@@ -127,8 +159,11 @@ namespace Projet_TransConnect
     }
 
 
-
-    public void ForEach(Action<T> action)
+        /// <summary>
+        /// Reecriture de la méthode ForEach
+        /// </summary>
+        /// <param name="action"></param>
+        public void ForEach(Action<T> action)
     {
         NoeudDico<T, U> current = tete;
 
@@ -139,5 +174,47 @@ namespace Projet_TransConnect
         }
     }
 
-}
+        /// <summary>
+        /// Trie le dictionnaire
+        /// </summary>
+        public void Sort()
+        {
+            NoeudDico<T, U> current = tete;
+            NoeudDico<T, U> previous = null;
+            NoeudDico<T, U> next = null;
+
+            while (current != null)
+            {
+                next = current.Suivant;
+                while (next != null)
+                {
+                    if (Comparer<T>.Default.Compare(current.Key, next.Key) > 0)
+                    {
+                        if (previous == null)
+                        {
+                            tete = next;
+                        }
+                        else
+                        {
+                            previous.Suivant = next;
+                        }
+
+                        current.Suivant = next.Suivant;
+                        next.Suivant = current;
+                        previous = next;
+                        next = current.Suivant;
+                    }
+                    else
+                    {
+                        previous = current;
+                        current = next;
+                        next = next.Suivant;
+                    }
+                }
+                current = current.Suivant;
+            }
+        }
+
+
+    }
 }

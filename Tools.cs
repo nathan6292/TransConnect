@@ -17,10 +17,12 @@ namespace Projet_TransConnect
     public class Tools
     {
 
-        //Predicate utile pour la suite :
-
-
-        // Get the travel duration between two points in real time with an API
+        /// <summary>
+        /// Obtenir la durée du trajet entre deux points en direct avec une API
+        /// </summary>
+        /// <param name="startCoordinates"></param>
+        /// <param name="endCoordinates"></param>
+        /// <returns></returns>
         public static double GetTravelDuration(double[] startCoordinates, double[] endCoordinates)
         {
             // Get the Mapbox API token from the environment variables
@@ -45,41 +47,55 @@ namespace Projet_TransConnect
             return duration/60;
         }
 
-        //Read an Excel file and return the data
+        /// <summary>
+        /// Lire un fichier CSV
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string[] ReadCSV(string path)
         {
-            // Read the file
             string[] lines = System.IO.File.ReadAllLines(path);
-
             return lines;
         }
 
+        /// <summary>
+        /// Fonction permettant de faire une rentrée utilisateur avec des conditions
+        /// </summary>
+        /// <param name="texte"></param>    Texte à affihcer
+        /// <param name="dico"></param> Dictionnaire de Predicate (conditions à respecter) assosiées à un message d'erreur
+        /// <returns></returns>
         public static string Saisie(string texte, Dictionary<Predicate<string>, string> dico)
         {
             string input = "";
             bool success = false;
 
-            while (!success)
+            while (!success)    //Tant que la saisie n'est pas valide
             {
-                Console.Write(texte);
+                Console.Write(texte);   //On écrit le texte specifiant à l'utilisateur ce qu'il doit rentrer
                 input = Console.ReadLine();
-                foreach (var key in dico.Keys)
+                foreach (var key in dico.Keys)  //On parcours chaque condition (Predicate) du dictionnaire
                 {
                     if (key(input))
                     {
-                        success = true;
+                        success = true;         //Si elle est respectée, on passe success à true
                     }
-                    if (!key(input))
+                    if (!key(input))        
                     {
-                        Console.WriteLine(dico[key] + "\n");
+                        Console.WriteLine(dico[key] + "\n");    //Sinon on affiche le message d'erreur associé à la condition
                         success = false;
-                        break;
+                        break;          //On arrete le parcours des conditions car une n'a pas été satisfaite
                     }
                 }
             }
             return input;
         }
 
+        /// <summary>
+        /// Identique à Saisie mais en utilisant le dictionary de la classe DictionnaireChainee
+        /// </summary>
+        /// <param name="texte"></param>
+        /// <param name="dico"></param>
+        /// <returns></returns>
         public static string Saisie1(string texte, DictionnaireChainee<Predicate<string>,string> dico)
         {
             string input = "";
@@ -109,6 +125,10 @@ namespace Projet_TransConnect
             }
             return input;
         }
+
+        /// <summary>
+        /// Affichage de fin de programme
+        /// </summary>
         public static void EndOfProgram()
         {
             Console.WriteLine("Appuyez sur n'importe quelle touche pour revenir au menu...");
@@ -116,6 +136,9 @@ namespace Projet_TransConnect
             Console.Clear();
         }
 
+        /// <summary>
+        /// Mettre à jour le csv dans les fichiers
+        /// </summary>
         public static void UpdateCSV()
         {
             string[] lines = Tools.ReadCSV("./Sauvegarde/Distances.csv");
@@ -156,6 +179,11 @@ namespace Projet_TransConnect
             File.WriteAllLines("./Sauvegarde/Distances.csv", output);
         }
 
+        /// <summary>
+        /// Convertir un double en temps (en minutes)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string doubleToTime(double value)
         {
             int heure = 0;

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Projet_TransConnect
 {
-    public class Chauffeur : Salarie
-{
+    public class Chauffeur : Salarie, IsToString
+    {
     protected double tarifHoraire;
     protected List<DateTime> emploiDuTemps; //Liste des horaires de livraisons du chauffeur
     //Ajouter Liste Livraison
@@ -87,12 +87,20 @@ namespace Projet_TransConnect
         return tarifHoraire;
     }
 
-    public override string ToString()
+        /// <summary>
+        /// Affiche les informations du chauffeur
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
     {
         return base.ToString() + "Tarif horaire : " + tarifHoraire + "\nEmploi du temps : " + EmploiDuTempsToString() + "\n\n";
     }
 
-    public string EmploiDuTempsToString()
+        /// <summary>
+        /// Affiche l'emploi du temps du chauffeur
+        /// </summary>
+        /// <returns></returns>
+        public string EmploiDuTempsToString()
     {
         string str = "";
         foreach (DateTime date in emploiDuTemps)
@@ -102,7 +110,12 @@ namespace Projet_TransConnect
         return str;
     }
 
-    public bool IsDispo(DateTime date)
+        /// <summary>
+        /// Retourne vrai si le chauffeur est disponible à la date donnée
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public bool IsDispo(DateTime date)
     {
         return !emploiDuTemps.Contains(date);
     }
