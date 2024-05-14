@@ -164,17 +164,20 @@ namespace Projet_TransConnect
                 itineraire += path[path.Count - 1];
 
                 prix = double.Parse(path[0]);
-            }
-        public void CreerFacture(string path)
+
+            //Appliquons la remise liée à la fidélité du client
+            prix = prix * (1 - client.Remise(entreprise));
+        }
+        public void CreerFacture()
         {
             GetPrice();
             //Numéro de la facture
             Random rand = new Random();
-            int numeroFacture = rand.Next(0, int.MaxValue);
+            int numeroFacture = id;
 
             // Création du document PDF
             Document document = new Document(PageSize.A4, 25, 25, 30, 30);
-            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(path, FileMode.Create));
+            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream($"Facture_{numeroFacture}.pdf", FileMode.Create));
 
             // Ouverture du document
             document.Open();
@@ -268,8 +271,9 @@ namespace Projet_TransConnect
             document.Close();
         }
 
-        public void SendFacture(string path)
+        public void SendFacture()
         {
+            CreerFacture();
             // Créer une instance de MailMessage pour représenter l'e-mail
             MailMessage message = new MailMessage();
 
@@ -277,7 +281,30 @@ namespace Projet_TransConnect
             message.From = new MailAddress("mr.dupond.transconnect@gmail.com");
 
             // Définir l'adresse e-mail du destinataire
-            message.To.Add("nathan.fleury@edu.devinci.fr");
+
+
+            //message.To.Add(client.Mail);
+            //En théorie, on envoie la facture au client, mais pour les besoins de la démonstration, on l'envoie à une adresse de test
+            Console.WriteLine("Il semblerait que le protocole smtp ne soit pas accrsible depuis leWiFi du pole deVinci, veuillez vous connecter à un autre réseau");
+            Console.WriteLine("En théorie, on envoie la facture au client, mais pour les besoins de la démonstration, on l'envoie à une adresse de test que l'on vous laisse saisir : ");
+            Console.WriteLine("\nLes adresses mail devinci posent parfois problème car elle bloque parfois les mails jugés supsects, entrez si possible un autre email !");
+            Console.WriteLine("Adresse mail : ");
+
+            bool valid = false;
+            while (!valid)
+            {
+                string adresseTest = Console.ReadLine();
+                valid = true;
+                try
+                {
+                    message.To.Add(adresseTest);
+                }
+                catch
+                {
+                    Console.WriteLine("Adresse invalide, veuillez réessayer : ");
+                    valid = false;
+                }
+            }
 
             // Définir l'objet de l'e-mail
             message.Subject = "Votre facture";
@@ -288,7 +315,7 @@ namespace Projet_TransConnect
             message.IsBodyHtml = true;
 
             // Ajouter la facture en pièce jointe
-            Attachment factureAttachment = new Attachment(path);
+            Attachment factureAttachment = new Attachment($"Facture_{id}.pdf");
             message.Attachments.Add(factureAttachment);
 
             // Créer une instance de SmtpClient pour envoyer l'e-mail

@@ -28,7 +28,13 @@ namespace Projet_TransConnect
         set { nom = value; }
     }
 
-    public string Adresse
+
+        public Arbre GetArbre()
+        {
+            return graphe;
+        }
+
+        public string Adresse
     {
         get { return adresse; }
         set { adresse = value; }
@@ -283,34 +289,34 @@ namespace Projet_TransConnect
         }
     }
 
-    /// <summary>
-    /// Supprimer/Licencier un salarié de l'entreprise
-    /// </summary>
-    /// <param name="salarie"></param>
-    public void SupprimerSalarie(Salarie salarie)
-    {
-        Salarie vire = FindSalarie("Quel salarié voulez-vous licencier ? ");
-        if (salarie.IsFeuille())    //Si il est a "au bas de l'échelle", on le supprime simplement
+        /// <summary>
+        /// Supprimer/Licencier un salarié de l'entreprise
+        /// </summary>
+        /// <param name="salarie"></param>
+        public void SupprimerSalarie()
         {
-            salaries.Remove(salarie);
-            salarie.SuperieurHierachique.InferieurHierachique.Remove(salarie);
-        }
-        else        //Sinon, pour conserver la structure de l'arbre on :
-        {
-            foreach (Salarie s in salarie.InferieurHierachique)
+            Salarie salarie = FindSalarie("Quel salarié voulez-vous licencier ? ");
+            if (salarie.IsFeuille())    //Si il est a "au bas de l'échelle", on le supprime simplement
             {
-                s.SuperieurHierachique = salarie.SuperieurHierachique;  //1. On attribue ses inférieurs à son supérieur  
-                salarie.SuperieurHierachique.InferieurHierachique.Add(s);
+                salaries.Remove(salarie);
+                salarie.SuperieurHierachique.InferieurHierachique.Remove(salarie);
             }
+            else        //Sinon, pour conserver la structure de l'arbre on :
+            {
+                foreach (Salarie s in salarie.InferieurHierachique)
+                {
+                    s.SuperieurHierachique = salarie.SuperieurHierachique;  //1. On attribue ses inférieurs à son supérieur  
+                    salarie.SuperieurHierachique.InferieurHierachique.Add(s);
+                }
 
-            salarie.SuperieurHierachique.InferieurHierachique.Remove(salarie);    //2. On retire le salarié de la liste des inférieurs de son supérieur
-            salaries.Remove(salarie); //3. On le retire de la liste des salariés
-            salarie = null; //On libère de l'espace mémoire
+                salarie.SuperieurHierachique.InferieurHierachique.Remove(salarie);    //2. On retire le salarié de la liste des inférieurs de son supérieur
+                salaries.Remove(salarie); //3. On le retire de la liste des salariés
+                salarie = null; //On libère de l'espace mémoire
 
+            }
         }
-    }
 
-    public Salarie FindSalarie(string text, List<Salarie> possibilites = null)
+        public Salarie FindSalarie(string text, List<Salarie> possibilites = null)
     {
         if (possibilites == null) possibilites = salaries;
         bool find = false;
@@ -513,11 +519,19 @@ namespace Projet_TransConnect
         return vehicules.Find(x=> x.Immatriculation == immat);
     }
 
-    #endregion
 
-    #region Créer/Modifier/Supprimer Commande
+        public void SupprimerVehicule()
+        {
+            Vehicule v = FindVehicule("Quelle vehicule voulez-vous supprimer : ");
+            vehicules.Remove(v);
+            commandes.FindAll(commande => commande.Vehicule == v).ForEach(commande => DeleteCommande(commande));
+        }
 
-    public void CreerCommande()
+        #endregion
+
+    #region Créer/Supprimer Commande
+
+        public void CreerCommande()
     {
         Console.WriteLine("Quel client a commandé : \n");
         Client client = FindClient("Quelle client a effectué la commande : ");
@@ -947,10 +961,5 @@ namespace Projet_TransConnect
 
 
     #endregion
-
-        public Arbre GetArbre()
-        {
-            return graphe;
-        }
     }
 }
