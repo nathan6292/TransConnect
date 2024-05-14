@@ -198,7 +198,7 @@ namespace Projet_TransConnect
     public void AfficherClient(List<Client> liste = null, Comparison<Client> compare = null)
     {
         if (liste == null) liste = clients;
-        liste.Sort(compare);
+        if (compare!= null) liste.Sort(compare);
         foreach (Client c in liste)
         {
             Console.Write(c.ToString() + "\n");
@@ -387,7 +387,7 @@ namespace Projet_TransConnect
 
     #endregion
 
-    #region Créer/Modifier/Supprimer Client
+    #region Créer/Modifier/SupprimerClient
     public void CreerClient()
     {
         string p = Tools.Saisie("Entrez le prénom du client : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le prénom ne peut pas être vide" } });
@@ -535,9 +535,17 @@ namespace Projet_TransConnect
     {
         Console.WriteLine("Quel client a commandé : \n");
         Client client = FindClient("Quelle client a effectué la commande : ");
-        //A modif
-        string depart = Tools.Saisie("Entrez le lieu de départ de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu de départ ne peut pas être vide" } });
-        string arrivee = Tools.Saisie("Entrez le lieu d'arrivée de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu d'arrivée ne peut pas être vide" } });
+
+            Console.WriteLine("Voici la liste des villes disponibles:\n");
+            foreach (Node n in graphe.nodes)
+            {
+                Console.WriteLine(n.Name);
+            }
+
+            Predicate<string> IsInGraph = new Predicate<string>(x => graphe.nodes.Exists(n => n.Name == x));
+            string depart = Tools.Saisie("Entrez le lieu de départ de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu de départ ne peut pas être vide" }, {IsInGraph, "Cette ville ne fais pas partie des villes possibles" } });
+            Predicate<string> IsDifferent = new Predicate<string>(x=> x!= depart);
+        string arrivee = Tools.Saisie("Entrez le lieu d'arrivée de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu d'arrivée ne peut pas être vide" }, { IsInGraph, "Cette ville ne fais pas partie des villes possibles" }, {IsDifferent, "La ville d'arrivée doit être différente de celle de départ" } });
         //Fin a modif
 
         DateTime date = DateTime.Parse(Tools.Saisie("Entrez la date de la commande : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" }}));
