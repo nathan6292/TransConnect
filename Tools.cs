@@ -156,5 +156,26 @@ namespace Projet_TransConnect
             File.WriteAllLines("./Sauvegarde/Distances.csv", output);
         }
 
+        public static string doubleToTime(double value)
+        {
+            int heure = 0;
+
+            while (value > 60)
+            {
+                heure++;
+                value = value - 60;
+            }
+
+            value = Math.Round(value,0);
+            if (value != 0)
+            {
+                return heure + "h" + value + "min";
+            }
+            else
+            {
+                return heure + "h";
+            }
+        }
+
     }
 }

@@ -29,7 +29,16 @@ namespace TransConnect{
         Console.ReadKey();
         Console.Clear();
 
-        graphe.Shortest_Path("Angers", "Toulouse");
+       Console.WriteLine(TransConnect.Commandes[0].ToString());
+       TransConnect.Commandes[0].CreerFacture("Facture.pdf");
+           // TransConnect.Commandes[0].SendFacture("Facture.pdf");
+
+        List<string> output = graphe.Shortest_Path("Angers", "Toulouse");
+
+        for(int i = 0; i < output.Count; i++)
+            {
+                Console.Write(output[i] + " ");
+            }
 
         //TransConnect.WriteSauvegarde("Sauvegarde");
         }

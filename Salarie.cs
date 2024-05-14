@@ -116,5 +116,10 @@ namespace Projet_TransConnect
     {
         return inferieurHierachique.Count == 0;
     }
+
+    public string GetName()
+        {
+            return nom + ", " + prenom;
+        }
 }
 }

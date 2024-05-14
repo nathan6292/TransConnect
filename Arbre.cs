@@ -49,9 +49,9 @@ namespace Projet_TransConnect
             return output;
         }
 
-        public string Shortest_Path(string start, string end)
+        public List<string> Shortest_Path(string start, string end)
         {
-            Dictionary<Node,(Node,double)> distance = new Dictionary<Node,(Node,double)>();
+            Dictionary<Node,(Node,double,double)> distance = new Dictionary<Node,(Node,double,double)>();
             bool modif = true;
 
             Node Start_Node = nodes.Find(node => node.GetName() == start);
@@ -62,11 +62,11 @@ namespace Projet_TransConnect
             {
                 if (nodes[i].GetName() == Start_Node.GetName())
                 {
-                    distance.Add(nodes[i], (Start_Node, 0));
+                    distance.Add(nodes[i], (Start_Node, 0,0));
                 }
                 else
                 {
-                    distance.Add(nodes[i],(null, 100000));
+                    distance.Add(nodes[i],(null, 100000,0));
                 }
             }
 
@@ -80,6 +80,7 @@ namespace Projet_TransConnect
                 double min = 1000000;
                 Node node_min = null;
                 double length = 0;
+                double km = 0;
                 List<Arrête> temp_arrete = temp.GetArrêtes(); 
                 for(int i = 0; i<temp_arrete.Count; i++) 
                 {
@@ -88,10 +89,12 @@ namespace Projet_TransConnect
                         if (last != null)
                         {
                             length = distance[temp].Item2 + temp_arrete[i].GetTime();
+                            km = distance[temp].Item3 + temp_arrete[i].GetDistance();
                         }
                         else
                         {
                             length = temp_arrete[i].GetTime();
+                            km = temp_arrete[i].GetDistance();
                         }
                         Console.WriteLine("Length : " + length);
                         Console.WriteLine(distance[temp_arrete[i].GetEnd()].Item2);
@@ -100,7 +103,7 @@ namespace Projet_TransConnect
                         {
                             Console.WriteLine("Modification");
                             modif = true;
-                            distance[temp_arrete[i].GetEnd()] = (temp, length);
+                            distance[temp_arrete[i].GetEnd()] = (temp, length, km);
                             if (min > length)
                             {
                                 min = length;
@@ -123,7 +126,20 @@ namespace Projet_TransConnect
                 }
             }
 
-            return "";
+            List<string> output = new List<string>();
+
+            Node temp2 = End_Node;
+            while (distance[temp2].Item2 != 0)
+            {
+                output.Add(temp2.GetName());
+                temp2 = distance[temp2].Item1;
+            }
+
+            output.Add(start);
+            output.Add(distance[End_Node].Item2.ToString());
+            output.Add(distance[End_Node].Item3.ToString());
+
+            return output;
         }
 
     }

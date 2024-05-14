@@ -14,6 +14,7 @@ namespace Projet_TransConnect
     protected string mail;
     protected int telephone;
     protected List<Salarie> salaries;
+    protected Arbre graphe;
 
     protected List<Client> clients;
     protected Salarie patron;                           //On considère que le patron est de la classe employé (pour faciliter l'orgranigramme)
@@ -88,6 +89,8 @@ namespace Projet_TransConnect
         this.vehicules = new List<Vehicule>();
         this.commandes = new List<Commande>();
         this.patron = patron;
+        this.graphe = new Arbre();
+        graphe.InitiateGraphe();
     }
 
     public Entreprise (string path)
@@ -104,7 +107,9 @@ namespace Projet_TransConnect
         this.clients = new List<Client>();
         this.vehicules = new List<Vehicule>();
         this.commandes = new List<Commande>();
-    }
+        this.graphe = new Arbre();
+        graphe.InitiateGraphe();
+        }
 
 
 
@@ -942,5 +947,10 @@ namespace Projet_TransConnect
 
 
     #endregion
-}
+
+        public Arbre GetArbre()
+        {
+            return graphe;
+        }
+    }
 }
