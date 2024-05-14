@@ -12,6 +12,8 @@ namespace Projet_TransConnect
         private double longitude { get;}
         
         private List<Arrête> arrêtes = new List<Arrête>();
+
+        public string Name { get { return name; } }
         public Node(string name, double longitude, double latitude){
             this.name = name;
             this.longitude = longitude;

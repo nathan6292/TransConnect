@@ -1,15 +1,32 @@
-Paris;Rouen;133;118,80888333333334
-Rouen;Paris;133;116,64028333333334
-Paris;Lyon;464;308,34341666666666
-Paris;Angers;294;199,05991666666665
+Paris;Rouen;133;118,8088833
+Rouen;Paris;133;116,6402833
+Paris;Lyon;464;308,3434167
+Lyon;Paris;464;0
+Angers;Paris;294;0
+Paris;Angers;294;199,0599167
+La Rochelle;Angers;187;0
 Angers;La Rochelle;187;137,26435
-La Rochelle;Bordeaux;183;132,02828333333335
-Bordeaux;Biarritz;202;151,11686666666668
-Biarritz;Toulouse;309;193,02346666666665
-Pau;Toulouse;193;124,78241666666666
-Toulouse;Nimes;289;182,44653333333332
-Montpellier;Nimes;52;60,83996666666667
-Nimes;Marseille;126;101,02161666666666
+Bordeaux;La Rochelle;183;0
+La Rochelle;Bordeaux;183;132,0282833
+Biarritz;Bordeaux;202;0
+Bordeaux;Biarritz;202;151,1168667
+Toulouse;Biarritz;309;0
+Biarritz;Toulouse;309;193,0234667
+Toulouse;Pau;193;0
+Pau;Toulouse;193;124,7824167
+Nimes;Toulouse;289;0
+Toulouse;Nimes;289;182,4465333
+Nimes;Montpellier;52;0
+Montpellier;Nimes;52;60,83996667
+Marseille;Nimes;126;0
+Nimes;Marseille;126;101,0216167
+Avignon;Marseille;99;0
 Marseille;Avignon;99;87,6566
-Monaco;Marseille;224;157,76674999999997
-Toulon;Monaco;169;136,38123333333334
+Marseille;Monaco;224;0
+Monaco;Marseille;224;157,76675
+Toulon;Monaco;169;136,3812333
+Monaco;Toulon;169;0
+Marseille;Lyon;312;0
+Lyon;Marseille;312;0
+Paris;Toulouse;675;0
+Toulouse;Paris;675;0
