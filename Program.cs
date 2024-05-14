@@ -15,8 +15,13 @@ namespace TransConnect{
             Start();
         }
 
+        /// <summary>
+        /// Fonction pour lancer le programme
+        /// </summary>
+
         static void Start()
         {
+            Console.WriteLine("Bienvenue sur TransConnect");
             string password = "1234";
             Console.WriteLine("Veuillez entrer le mot de passe pour accéder à la sauvegarde\n");
             Console.WriteLine("Rentrez stop pour quitter le programme\n");
@@ -36,7 +41,6 @@ namespace TransConnect{
                 Console.WriteLine("Sauvegarde chargée");
                 Sortie();
                 Menu(TransConnect);
-                TransConnect.WriteSauvegarde("Sauvegarde");
             }
             else
             {
@@ -46,6 +50,11 @@ namespace TransConnect{
             }
         }
 
+
+        /// <summary>
+        /// Menu pour rentrer dans les différent modules
+        /// </summary>
+        /// <param name="Transconnect"></param>
         static void Menu(Entreprise Transconnect)
         {
             int choice = 0;
@@ -89,7 +98,14 @@ namespace TransConnect{
                 }
             }
             while (choice != 0);
+            Transconnect.WriteSauvegarde("Sauvegarde");  //On sauvegarde les données
         }
+
+
+        /// <summary>
+        /// Module Client
+        /// </summary>
+        /// <param name="Transconnect"></param>
 
         static void MenuClient(Entreprise Transconnect)
         {
@@ -155,6 +171,10 @@ namespace TransConnect{
             }
         }
 
+        /// <summary>
+        /// Module Salarié
+        /// </summary>
+        /// <param name="Transconnect"></param>
         static void MenuSalarie(Entreprise Transconnect)
         {
             Console.WriteLine("Sélectionnez une option :");
@@ -202,6 +222,11 @@ namespace TransConnect{
             }
         }
 
+
+        /// <summary>
+        /// Module Vehicule
+        /// </summary>
+        /// <param name="Transconnect"></param>
         static void MenuVehicule(Entreprise Transconnect)
         {
             Console.WriteLine("Sélectionnez une option :");
@@ -237,6 +262,10 @@ namespace TransConnect{
             }
         }
 
+        /// <summary>
+        /// Module Statistiques
+        /// </summary>
+        /// <param name="Transconnect"></param>
         static void MenuStatistique(Entreprise Transconnect)
         {
             Console.WriteLine("Sélectionnez une option :");
@@ -291,6 +320,10 @@ namespace TransConnect{
             }
         }
 
+        /// <summary>
+        /// Module Commandes
+        /// </summary>
+        /// <param name="Transconnect"></param>
         static void MenuCommandes(Entreprise Transconnect)
         {
             Console.WriteLine("Sélectionnez une option :");
@@ -340,7 +373,10 @@ namespace TransConnect{
         }
 
 
-
+        /// <summary>
+        /// Fonction de fin d'affichage
+        /// Pour éviter d'avoir à la réécrire à chaque fois
+        /// </summary>
         static void Sortie()
         {
             Console.WriteLine("Appuyez sur n'importe quelle touche...");

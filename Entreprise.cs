@@ -22,61 +22,94 @@ namespace Projet_TransConnect
     protected List<Vehicule> vehicules;
 
     #region accesseurs
+
+    /// <summary>
+    /// Accesseur de nom en lecture et en écriture
+    /// </summary>
     public string Nom
     {
         get { return nom; }
         set { nom = value; }
     }
 
-
+        /// <summary>
+        /// Accesseurs de l'arbre en lecture
+        /// </summary>
+        /// <returns></returns>
         public Arbre GetArbre()
         {
             return graphe;
         }
 
+        /// <summary>
+        /// Acceseur de Adresse en lecture et écriture
+        /// </summary>
         public string Adresse
-    {
-        get { return adresse; }
-        set { adresse = value; }
-    }
+        {
+            get { return adresse; }
+            set { adresse = value; }
+        }
 
-    public string Mail
+        /// <summary>
+        /// Accesseur de mail en lecture et en écriture
+        /// </summary>
+        public string Mail
     {
         get { return mail; }
         set { mail = value; }
     }
 
-    public int Telephone
+        /// <summary>
+        /// Accesseur de telephone en lecture et en écriture
+        /// </summary>
+        public int Telephone
     {
         get { return telephone; }
         set { telephone = value; }
     }
 
-    public List<Salarie> Salaries
+        /// <summary>
+        /// Accesseur des salariés en lecture et en écriture
+        /// </summary>
+        public List<Salarie> Salaries
     {
         get { return salaries; }
         set { salaries = value; }
     }
 
-    public Salarie Patron
+        /// <summary>
+        /// Accesseur du patron en lecture et en écriture
+        /// </summary>
+
+        public Salarie Patron
     {
         get { return patron; }
         set { patron = value; }
     }
 
-    public List<Client> Clients
+        /// <summary>
+        /// Accesseur des clients en lecture et en écriture
+        /// </summary>
+        public List<Client> Clients
     {
         get { return clients; }
         set { clients = value; }
     }
 
-    public List<Vehicule> Vehicules
+        /// <summary>
+        /// Accesseur des véhicules en lecture et en écriture
+        /// </summary>
+        public List<Vehicule> Vehicules
     {
         get { return vehicules; }
         set { vehicules = value; }
     }
 
-    public List<Commande> Commandes
+
+        /// <summary>
+        /// Accesseur des commandes en lecture et en écriture
+        /// </summary>
+        public List<Commande> Commandes
     {
         get { return commandes; }
         set { commandes = value; }
@@ -84,22 +117,34 @@ namespace Projet_TransConnect
 
     #endregion 
 
+    /// <summary>
+    /// Constructeur de l'objet Entreprise
+    /// </summary>
+    /// <param name="nom"></param>
+    /// <param name="adresse"></param>
+    /// <param name="mail"></param>
+    /// <param name="telephone"></param>
+    /// <param name="patron"></param>
     public Entreprise(string nom, string adresse, string mail, int telephone, Salarie patron)
     {
         this.nom = nom;
         this.adresse = adresse;
         this.mail = mail;
         this.telephone = telephone;
-        this.salaries = new List<Salarie>();
-        this.clients = new List<Client>();
+        this.salaries = new List<Salarie>();        //Salariés, clients, véhicules et commandes sont initialisés vides
+            this.clients = new List<Client>();
         this.vehicules = new List<Vehicule>();
         this.commandes = new List<Commande>();
         this.patron = patron;
         this.graphe = new Arbre();
-        graphe.InitiateGraphe();
-    }
+        graphe.InitiateGraphe();                //On initialise le graphe
+        }
 
-    public Entreprise (string path)
+        /// <summary>
+        /// Constructeur de l'objet entreprise à partir d'un fichier csv
+        /// </summary>
+        /// <param name="path"></param>
+        public Entreprise (string path)
     {
         string[] text = File.ReadAllLines(path + "\\Entreprise.csv");
         string[] elements = text[0].Split(',');
@@ -117,12 +162,6 @@ namespace Projet_TransConnect
         graphe.InitiateGraphe();
         }
 
-
-
-    /// <summary>
-    /// Ajouter un salarié à l'entreprise
-    /// </summary>
-    /// <param name="salarie"></param>
 
 
     #region Predicate utilisés pour les saisies
@@ -144,11 +183,15 @@ namespace Projet_TransConnect
             return false;
         }
     });
-    #endregion
+        #endregion
 
     #region Affichage
 
-    public string ToString()
+        /// <summary>
+        /// Affichage de l'entreprise
+        /// </summary>
+        /// <returns></returns>
+        public string ToString()
     {
         return "Nom : " + nom + "\nAdresse : " + adresse + "\nMail : " + mail + "\nTéléphone : " + telephone + "\nDirigeant : " + patron.Nom + "\nNombre de salariés : " + salaries.Count + "\nNombre de clients : " + clients.Count;
     }
@@ -183,10 +226,10 @@ namespace Projet_TransConnect
     /// <summary>
     /// Afficher la liste des salariés de l'entreprise
     /// </summary>
-    public void AfficherSalarie(List<Salarie> liste = null)
+    public void AfficherSalarie(List<Salarie> liste = null) 
     {
-        if (liste == null) liste = salaries;
-        foreach (Salarie s in liste)
+        if (liste == null) liste = salaries;    //Possibilités de renseigner une liste plus restreinte (utile dans d'autres méthodes)
+        foreach (Salarie s in liste)            //On fais de même pour les prochains affichges de liste
         {
             Console.WriteLine(s.ToString() + "\n");
         }
@@ -197,8 +240,8 @@ namespace Projet_TransConnect
     /// </summary>
     public void AfficherClient(List<Client> liste = null, Comparison<Client> compare = null)
     {
-        if (liste == null) liste = clients;
-        if (compare!= null) liste.Sort(compare);
+        if (liste == null) liste = clients;         //Possibilité de renseigner une liste plus restreinte
+        if (compare!= null) liste.Sort(compare);    //Possibilité de trier la liste selon un Comparison saisie en paramètre
         foreach (Client c in liste)
         {
             Console.Write(c.ToString() + "\n");
@@ -206,6 +249,11 @@ namespace Projet_TransConnect
         }
     }
 
+        /// <summary>
+        /// Renvoie le montant des achats cumulés d'un client
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
     public double AchatCumules(Client c)
     {
         if (commandes.FindAll(com => com.Client == c).Count == 0) return 0;
@@ -215,7 +263,12 @@ namespace Projet_TransConnect
         }
     }
 
-    public void AfficherVehicule(List<Vehicule> liste = null)
+        /// <summary>
+        /// Afficher la liste des véhicules de l'entreprise
+        /// </summary>
+        /// <param name="liste"></param>
+
+        public void AfficherVehicule(List<Vehicule> liste = null)
     {
         if (liste == null) liste = vehicules;
         foreach (Vehicule v in liste)
@@ -223,6 +276,11 @@ namespace Projet_TransConnect
             Console.WriteLine(v.ToString() + "\n");
         }
     }
+
+    /// <summary>
+    /// Afficher la liste des commandes de l'entreprise
+    /// </summary>
+    /// <param name="liste"></param>
 
     public void AfficherCommande(List<Commande> liste = null)
     {
@@ -236,6 +294,10 @@ namespace Projet_TransConnect
     #endregion
 
     #region Créer/Modifier/Supprimer Salarie
+
+    /// <summary>
+    /// Créer un salarié à partir de saisie utilisateur
+    /// </summary>
     public void CreerSalarie()
     {
         string prenom = Tools.Saisie("Entrez le prénom du salarié : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le prénom ne peut pas être vide" } });
@@ -262,7 +324,7 @@ namespace Projet_TransConnect
         List<Salarie> possibilites = sup.InferieurHierachique;
         while (inf)
         {
-            infHier.Add(FindSalarie("Choisissez l'inférieur hierachique : ", sup.InferieurHierachique));
+            infHier.Add(FindSalarie("Choisissez l'inférieur hierachique : ", sup.InferieurHierachique));    //Un salarié a toujours un sup hierachique
             possibilites.Remove(infHier.Last());
             if (possibilites.Count == 0)
             {
@@ -316,6 +378,13 @@ namespace Projet_TransConnect
             }
         }
 
+
+        /// <summary>
+        /// Permet à l'utilisateur de selectionner un salarié parmi ceux proposés
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="possibilites"></param>
+        /// <returns></returns>
         public Salarie FindSalarie(string text, List<Salarie> possibilites = null)
     {
         if (possibilites == null) possibilites = salaries;
@@ -330,6 +399,9 @@ namespace Projet_TransConnect
         return salaries.Find(x => x.Id == inputID);
     }
 
+        /// <summary>
+        /// Modifier les paramètres d'un salarié
+        /// </summary>
     public void ModifierSalarie()
     {
         Console.Clear();
@@ -388,6 +460,10 @@ namespace Projet_TransConnect
     #endregion
 
     #region Créer/Modifier/SupprimerClient
+
+    /// <summary>
+    /// Créer un client à partir de saisie utilisateur
+    /// </summary>
     public void CreerClient()
     {
         string p = Tools.Saisie("Entrez le prénom du client : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le prénom ne peut pas être vide" } });
@@ -399,13 +475,20 @@ namespace Projet_TransConnect
         clients.Add(new Client(0, p, n, na, a, m, t));
     }
 
-    public void SupprimerClient()
+        /// <summary>
+        /// Supprimer un client de l'entreprise
+        /// </summary>
+        public void SupprimerClient()
     {
         Client c = FindClient("Quelle client voulez-vous supprimer : ");
         clients.Remove(c);
+        //On supprime les commandes associées à ce client
         commandes.FindAll(commande => commande.Client == c).ForEach(commande => DeleteCommande(commande));
     }
 
+        /// <summary>
+        /// Modifier les paramètres d'un client
+        /// </summary>
     public void ModifierClient()
     {
         Console.Clear();
@@ -420,7 +503,7 @@ namespace Projet_TransConnect
         bool finish = false;
         while (!finish)
         {
-            Console.WriteLine("Informations sur le salarié :\n");
+            Console.WriteLine("Informations sur le client :\n");
             Console.WriteLine(Amodifier.ToString());
             Console.WriteLine("\n\nQue souhaitez vous modifier ?\n");
             Console.WriteLine("1 - Adresse (Tapez 1)\n2 - Mail (Tapez 2)\n3 - Telephone (Tapez 3)");
@@ -446,6 +529,11 @@ namespace Projet_TransConnect
         Tools.EndOfProgram();
     }
 
+    /// <summary>
+    /// Permet de selectionner un client
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
     public Client FindClient(string text)
     {
         bool find = false;
@@ -462,6 +550,9 @@ namespace Projet_TransConnect
 
     #region Créer/Supprimer Vehicule
 
+    /// <summary>
+    /// Créer un véhciule à partir de saisie utilisateur
+    /// </summary>
     public void CreerVehicule()
     {
         Console.WriteLine("Quelle est le tye du véhicule :\nVoiture (Tapez 1)\nCamionette(Tapez 2)\nCamion Benne (Tapez 3)\nCamion citerne(Tapez 4)\nCamion frigorifique(Tapez 5)\n\n");
@@ -506,6 +597,12 @@ namespace Projet_TransConnect
         }
     }
 
+    /// <summary>
+    /// Peermet de selectionner un vehicule parmi ceux proposés
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="possibilites"></param>
+    /// <returns></returns>
     public Vehicule FindVehicule(string text, List<Vehicule> possibilites = null)
     {
         if (possibilites == null) possibilites = vehicules;
@@ -519,18 +616,24 @@ namespace Projet_TransConnect
         return vehicules.Find(x=> x.Immatriculation == immat);
     }
 
+        /// <summary>
+        /// Supprimer un vehciule de l'entreprise
+        /// </summary>
 
         public void SupprimerVehicule()
         {
             Vehicule v = FindVehicule("Quelle vehicule voulez-vous supprimer : ");
             vehicules.Remove(v);
+            //Supprimer les commandes associées au véhicule
             commandes.FindAll(commande => commande.Vehicule == v).ForEach(commande => DeleteCommande(commande));
         }
 
         #endregion
 
     #region Créer/Supprimer Commande
-
+    /// <summary>
+    /// Créer une commande à partir de saisie utilisateur
+    /// </summary>
         public void CreerCommande()
     {
         Console.WriteLine("Quel client a commandé : \n");
@@ -542,6 +645,7 @@ namespace Projet_TransConnect
                 Console.WriteLine(n.Name);
             }
 
+            Console.WriteLine("\n\n");
             Predicate<string> IsInGraph = new Predicate<string>(x => graphe.nodes.Exists(n => n.Name == x));
             string depart = Tools.Saisie("Entrez le lieu de départ de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu de départ ne peut pas être vide" }, {IsInGraph, "Cette ville ne fais pas partie des villes possibles" } });
             Predicate<string> IsDifferent = new Predicate<string>(x=> x!= depart);
@@ -549,7 +653,6 @@ namespace Projet_TransConnect
         //Fin a modif
 
         DateTime date = DateTime.Parse(Tools.Saisie("Entrez la date de la commande : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" }}));
-        double prix = double.Parse(Tools.Saisie("Entrez le prix facturé pour la commande : ", new Dictionary<Predicate<string>, string> { { IsDouble, "Le prix n'est pas valide" }, { IsPositive, "Le prix ne peut pas être négatif" } }));
 
         string desscription = Tools.Saisie("Entrez la description de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "La description ne peut pas être vide" } });
 
@@ -564,13 +667,19 @@ namespace Projet_TransConnect
         List<Vehicule> VehiculePossible = vehicules.FindAll(v => v.IsDispo(date));
         Vehicule vehicule = FindVehicule("Quel véhicule va effectué la commande parmi ceux disponible le " + date.ToString("dd/MM/yyyy") + " : ", VehiculePossible);
 
-        Commande commande = new Commande(this, client, chauffeur, vehicule, depart, arrivee, date, prix, desscription);
+        Commande commande = new Commande(this, client, chauffeur, vehicule, depart, arrivee, date, -1, desscription);
 
         commandes.Add(commande);
 
     }
 
-    public Commande FindCommande(string text, List<Commande> possibilites = null)
+        /// <summary>
+        /// Selectionner une commande parmi celles proposées
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="possibilites"></param>
+        /// <returns></returns>
+        public Commande FindCommande(string text, List<Commande> possibilites = null)
     {
         if (possibilites == null) possibilites = commandes;
         Console.WriteLine("Liste des commandes possibles : \n");
@@ -583,13 +692,18 @@ namespace Projet_TransConnect
         return commandes.Find(x => x.Id == id);
     }
 
-    public void SupprimerCommande()
+        //Supprimer une commande parmi celles proposées
+        public void SupprimerCommande()
     {
         Commande c = FindCommande("Quelle commande voulez-vous supprimer : ");
         DeleteCommande(c);
     }
 
-    public void DeleteCommande(Commande c)
+        /// <summary>
+        /// Supprimer une commande dans les objets concernés
+        /// </summary>
+        /// <param name="c"></param>
+        public void DeleteCommande(Commande c)
     {
         commandes.Remove(c);
         c.Chauffeur.EmploiDuTemps.Remove(c.Date);
@@ -600,6 +714,9 @@ namespace Projet_TransConnect
 
     #region Statistiques
 
+    /// <summary>
+    /// Afficher le nombre de livraison par chauffeur
+    /// </summary>
     public void AfficherNblivraisonParChauffeur()
     {
         List<Salarie> chauffeurs = salaries.FindAll(s => s is Chauffeur);
@@ -610,38 +727,66 @@ namespace Projet_TransConnect
         }
     }
 
+    /// <summary>
+    /// Renvoie le nombre de commande effectué par un chauffeur
+    /// </summary>
+    /// <param name="chauffeur"></param>
+    /// <returns></returns>
     public int NbCommandeChauffeur(Salarie chauffeur)
     {
         if (chauffeur is not Chauffeur) return 0;
         else return commandes.Count(c => c.Chauffeur == chauffeur);
     }
 
+    /// <summary>
+    /// Afficher les commandes entre 2 dates données
+    /// </summary>
+    /// <param name="inf"></param>
+    /// <param name="sup"></param>
     public void AfficherCommandeEntreDates(DateTime inf, DateTime sup)
     {
         List<Commande> CommmandesAafficher = commandes.FindAll(c => c.Date >= inf && c.Date <= sup);
         AfficherCommande(CommmandesAafficher);
     }
 
+    /// <summary>
+    /// Moyenne des prix des commandes
+    /// </summary>
+    /// <returns></returns>
     public double MoyennePrixCommande()
     {
         return commandes.Average(c => c.Prix);
     }
+
+    /// <summary>
+    /// Renvoie la moyenne des comptes clients
+    /// </summary>
+    /// <returns></returns>
 
     public double MoyenneCompteClient()
     {
         return clients.Select(client => AchatCumules(client)).Average();
     }
 
+    /// <summary>
+    /// Afficher les commandes pour un client donné
+    /// </summary>
+    /// <param name="c"></param>
     public void AffciherCommandeClient(Client c)
     {
         AfficherCommande(commandes.FindAll(com=>com.Client==c));
     }
 
 
-    #endregion
+        #endregion
 
     #region Lecture/Ecriture de Fichiers
-    public void ReadSauvegarde(string path)
+
+        /// <summary>
+        /// Permet de lire les fichiers de sauvegarde
+        /// </summary>
+        /// <param name="path"></param>
+        public void ReadSauvegarde(string path)
     {
             ReadClient(path + "\\Clients.csv");
             ReadChauffeur(path + "\\Chauffeur.csv");
@@ -651,9 +796,11 @@ namespace Projet_TransConnect
             ReadCommande(path + "\\Commandes.csv");
     }
 
-    public void WriteSauvegarde(string path)
-    {
-        try
+        /// <summary>
+        /// Permet d'écrire les fichiers de sauvegarde
+        /// </summary>
+        /// <param name="path"></param>
+        public void WriteSauvegarde(string path)
         {
             SaveClient(path + "\\Clients.csv");
             SaveChauffeur(path + "\\Chauffeur.csv");
@@ -661,21 +808,25 @@ namespace Projet_TransConnect
             SaveRelation(path + "\\Relations.csv");
             SaveVehicule(path + "\\Vehicules.csv");
             SaveEntreprise(path + "\\Entreprise.csv");
-
+            SaveCommande(path + "\\Commandes.csv");
         }
 
-        catch { }
-        SaveCommande(path + "\\Commandes.csv");
-    }
-
-    public void SaveEntreprise(string path)
+        /// <summary>
+        /// Sauvegarde les informations de l'entreprise
+        /// </summary>
+        /// <param name="path"></param>
+        public void SaveEntreprise(string path)
     {
         List<string> text = new List<string>();
         text.Add(string.Format("{0},{1},{2},{3}", nom, adresse, mail, telephone));
         File.WriteAllLines(path, text);
     }
 
-    public void SaveSalarie(string path)
+        /// <summary>
+        /// Sauvegarde les informations des salariés
+        /// </summary>
+        /// <param name="path"></param>
+        public void SaveSalarie(string path)
     {
         List<string> text = new List<string>();
         foreach (Salarie salarie in salaries)
@@ -692,7 +843,11 @@ namespace Projet_TransConnect
         File.WriteAllLines(path, text);
     }
 
-    public void SaveChauffeur(string path)
+        /// <summary>
+        /// Sauvegarde les informations des chauffeurs
+        /// </summary>
+        /// <param name="path"></param>
+        public void SaveChauffeur(string path)
     {
         List<string> text = new List<string>();
         foreach (Salarie salarie in salaries)
@@ -710,6 +865,10 @@ namespace Projet_TransConnect
         File.WriteAllLines(path, text);
     }
 
+        /// <summary>
+        /// Permet de lire la sauvagarde des salariés
+        /// </summary>
+        /// <param name="path"></param>
     public void ReadSalarie(string path)
     {
         string[] lignes = File.ReadAllLines(path);
@@ -738,6 +897,10 @@ namespace Projet_TransConnect
         }
     }
 
+        /// <summary>
+        /// Permet de lire la sauvegarde des chauffeurs
+        /// </summary>
+        /// <param name="path"></param>
     public void ReadChauffeur(string path)
     {
         string[] lignes = File.ReadAllLines(path);
@@ -765,7 +928,11 @@ namespace Projet_TransConnect
         }
     }
 
-    public void SaveRelation(string path)
+        /// <summary>
+        /// Permet de sauvegarder les relations hiérarchiques entre les salariés
+        /// </summary>
+        /// <param name="path"></param>
+        public void SaveRelation(string path)
     {
         List<string> text = new List<string>();
         foreach (Salarie salarie in salaries)
@@ -783,7 +950,11 @@ namespace Projet_TransConnect
         File.WriteAllLines(path, text);
     }
 
-    public void ReadRelation(string path)
+        /// <summary>
+        /// Permet de lire la sauvegarde des relations hiérarchiques
+        /// </summary>
+        /// <param name="path"></param>
+        public void ReadRelation(string path)
     {
 
         string[] text = File.ReadAllLines(path);
@@ -801,7 +972,11 @@ namespace Projet_TransConnect
         }
     }
 
-    public void SaveClient(string path)
+        /// <summary>
+        /// Permet de sauvegarder les clients
+        /// </summary>
+        /// <param name="path"></param>
+        public void SaveClient(string path)
     {
         List<string> text = new List<string>();
         foreach (Client client in clients)
@@ -814,6 +989,10 @@ namespace Projet_TransConnect
         File.WriteAllLines(path, text);
     }
 
+        /// <summary>
+        /// Permet de lire la sauvegarde des clients
+        /// </summary>
+        /// <param name="path"></param>
     public void ReadClient(string path)
     {
         string[] lignes = File.ReadAllLines(path);
@@ -835,6 +1014,10 @@ namespace Projet_TransConnect
         }
     }
 
+        /// <summary>
+        /// Permet de sauvegarder les véhciules
+        /// </summary>
+        /// <param name="path"></param>
     public void SaveVehicule(string path)
     {
         List<string> text = new List<string>();
@@ -889,7 +1072,11 @@ namespace Projet_TransConnect
         File.WriteAllLines(path, text);
     }
 
-    public void ReadVehicule(string path)
+        /// <summary>
+        /// Permet de lire la sauvegarde des véhicules
+        /// </summary>
+        /// <param name="path"></param>
+        public void ReadVehicule(string path)
     {
         string[] lines = File.ReadAllLines(path);
         if (lines.Length == 0) return;
@@ -920,7 +1107,11 @@ namespace Projet_TransConnect
         }
     }
 
-    public void SaveCommande(string path)
+        /// <summary>
+        /// Permet de sauvegarder les commandes
+        /// </summary>
+        /// <param name="path"></param>
+        public void SaveCommande(string path)
     {
         List<string> text = new List<string>();
 
@@ -943,7 +1134,12 @@ namespace Projet_TransConnect
         File.WriteAllLines(path, text);
     }
 
-    public void ReadCommande(string path)
+
+        /// <summary>
+        /// Permet de lire la sauvegarde des commandes
+        /// </summary>
+        /// <param name="path"></param>
+        public void ReadCommande(string path)
     {
         string[] lines = File.ReadAllLines(path);
 

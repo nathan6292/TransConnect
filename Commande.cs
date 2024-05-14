@@ -39,28 +39,70 @@ namespace Projet_TransConnect
 
         #region Accesseurs
 
+        /// <summary>
+        /// Accesseur de l'attribut id en lecture et écriture
+        /// </summary>
         public int Id { get => id; set => id = value; }
 
+        /// <summary>
+        /// Accesseur de l'attribut client en lecture et écriture
+        /// </summary>
         public Client Client { get => client; set => client = value; }
 
+        /// <summary>
+        /// Accesseur de l'attribut chauffeur en lecture et écriture
+        /// </summary>
         public Chauffeur Chauffeur { get => chauffeur; set => chauffeur = value; }
 
+        /// <summary>
+        /// Accesseur de l'attribut vehicule en lecture et écriture
+        /// </summary>
         public Vehicule Vehicule { get => vehicule; set => vehicule = value; }
 
+        /// <summary>
+        /// Accesseur de l'attribut départ en lecture et écriture
+        /// </summary>
         public string Depart { get => départ; set => départ = value; }
 
+        /// <summary>
+        /// Accesseur de l'attribut arrivée en lecture et écriture
+        /// </summary>
         public string Arrivee { get => arrivée; set => arrivée = value; }
 
+        /// <summary>
+        /// Accesseur de l'attribut prix en lecture et écriture
+        /// </summary>
         public double Prix { get => prix; set => prix = value; }
 
+        /// <summary>
+        /// Accesseur de l'attribut description en lecture et écriture
+        /// </summary>
         public string Description { get => description; set => description = value; }
 
+        /// <summary>
+        /// Accesseur de l'attribut itineraire en lecture et écriture
+        /// </summary>
         public DateTime Date { get => date; set => date = value; }
 
+        /// <summary>
+        /// Accesseur de l'attribut statut en lecture et écriture
+        /// </summary>
         public bool Statut { get => statut; set => statut = value; }
 
         #endregion
 
+        /// <summary>
+        /// Créer une commande
+        /// </summary>
+        /// <param name="entreprise"></param>
+        /// <param name="client"></param>
+        /// <param name="chauffeur"></param>
+        /// <param name="vehicule"></param>
+        /// <param name="depart"></param>
+        /// <param name="arrivee"></param>
+        /// <param name="date"></param>
+        /// <param name="prix"></param>
+        /// <param name="description"></param>
         public Commande(Entreprise entreprise,Client client, Chauffeur chauffeur, Vehicule vehicule, string depart, string arrivee, DateTime date,double prix, string description)
         {
 
@@ -71,13 +113,8 @@ namespace Projet_TransConnect
             this.vehicule = vehicule;
             this.départ = depart;
             this.arrivée = arrivee;
-            this.prix = prix;
             this.description = description;
-            this.duration = "";
-             
-            
-
-
+            this.duration = "";            
             this.date = date;
 
             this.statut = date < DateTime.Now;
@@ -92,24 +129,25 @@ namespace Projet_TransConnect
             IDexistant.Add(temp);
             chauffeur.EmploiDuTemps.Add(date);
             vehicule.EmploiDuTemps.Add(date);
+
+            //Si le prix est donné, on le prend tel quel, sinon on le calcule
+            if (prix != -1) this.prix = prix;
+            else GetPrice();
         }
-        //Constructeur
-
-        //Chauffeur doit etre libre
-        //Véhicule doit etre libre
-        //Client doit etre existant
-        //ID doit etre unique
 
 
-        //ToString
-
+        /// <summary>
+        /// Afficher la commande
+        /// </summary>
+        /// <returns></returns>
         public string ToString()
         {
             return $"Commande ID: {id}\nClient: {client.Nom} {client.Prenom}\nChauffeur: {chauffeur.Nom} {chauffeur.Prenom}\nVéhicule: {vehicule.Immatriculation}\nDépart: {départ}\nArrivée: {arrivée}\nPrix: {prix}\nDate: {date.ToShortDateString()}\nStatut: " + (statut ? "Livré" : "A venir") + "\n\n";
         }
 
-
-        //Facture
+        /// <summary>
+        /// Calculer le prix de la commande
+        /// </summary>
 
         public void GetPrice()
         {
@@ -168,6 +206,10 @@ namespace Projet_TransConnect
             //Appliquons la remise liée à la fidélité du client
             prix = prix * (1 - client.Remise(entreprise));
         }
+
+        /// <summary>
+        /// Créer une facture
+        /// </summary>
         public void CreerFacture()
         {
             GetPrice();
@@ -271,6 +313,9 @@ namespace Projet_TransConnect
             document.Close();
         }
 
+        /// <summary>
+        /// Envoyer une facture par mail au client
+        /// </summary>
         public void SendFacture()
         {
             CreerFacture();
@@ -333,14 +378,5 @@ namespace Projet_TransConnect
             smtpClient.Dispose();
 
         }
-
-        //Annuler
-
-        //Modifier
-
-
-
-        //Afficher List<commande> dans entreprise
-        //Ne pas oublier la liste chainée
     }
 }
