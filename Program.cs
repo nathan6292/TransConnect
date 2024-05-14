@@ -36,6 +36,7 @@ namespace TransConnect{
                 Console.WriteLine("Sauvegarde chargée");
                 Sortie();
                 Menu(TransConnect);
+                TransConnect.WriteSauvegarde("Sauvegarde");
             }
             else
             {
@@ -86,7 +87,6 @@ namespace TransConnect{
                         MenuStatistique(Transconnect);
                         break;
                 }
-                Transconnect.WriteSauvegarde("Sauvegarde");
             }
             while (choice != 0);
         }
