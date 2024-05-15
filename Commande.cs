@@ -14,7 +14,7 @@ using TransConnect;
 
 namespace Projet_TransConnect
 {
-    public class Commande
+    public class Commande : IsToString
     {
         private Entreprise entreprise;
         private static List<int> IDexistant = new List<int>();
@@ -103,7 +103,7 @@ namespace Projet_TransConnect
         /// <param name="date"></param>
         /// <param name="prix"></param>
         /// <param name="description"></param>
-        public Commande(Entreprise entreprise,Client client, Chauffeur chauffeur, Vehicule vehicule, string depart, string arrivee, DateTime date,double prix, string description)
+        public Commande(int id, Entreprise entreprise,Client client, Chauffeur chauffeur, Vehicule vehicule, string depart, string arrivee, DateTime date,double prix, string description)
         {
 
             
@@ -125,14 +125,13 @@ namespace Projet_TransConnect
             {
                 temp = rand.Next(0, 1000000);
             }
-            this.id = temp;
+            if (id==-1) this.id = temp;
+            else this.id = id;
             IDexistant.Add(temp);
             chauffeur.EmploiDuTemps.Add(date);
             vehicule.EmploiDuTemps.Add(date);
 
-            //Si le prix est donné, on le prend tel quel, sinon on le calcule
-            if (prix != -1) this.prix = prix;
-            else GetPrice();
+            GetPrice(false);
         }
 
 
@@ -149,62 +148,75 @@ namespace Projet_TransConnect
         /// Calculer le prix de la commande
         /// </summary>
 
-        public void GetPrice()
+        public double GetPrice(bool print)
         {
-                List<string> shortestPath = entreprise.GetArbre().Shortest_Path(this.départ, this.arrivée);
+            List<string> shortestPath = entreprise.GetArbre().ShortestPath(this.départ, this.arrivée);
 
-                double duration = double.Parse(shortestPath[shortestPath.Count - 2]);
-                this.duration = Tools.doubleToTime(duration);
-                double distance = double.Parse(shortestPath[shortestPath.Count - 1]);
+            double duration = double.Parse(shortestPath[shortestPath.Count - 1]);
+            this.duration = Tools.doubleToTime(duration);
+            double distance = double.Parse(shortestPath[shortestPath.Count - 2]);
+            double tarifHoraire = chauffeur.CalculerTarifHoraire();
+            double tarifkm;
 
-                double tarifHoraire = chauffeur.CalculerTarifHoraire();
-
-                double tarifkm;
-
-                switch (vehicule)
+            if (print) {
+                Console.WriteLine("Itininéraire à suivre :");
+                for (int i = 0; i < shortestPath.Count - 2; i++)
                 {
-                    case Voiture:
-                        tarifkm = 0.5;
-                        break;
-
-                    case Camionette:
-                        tarifkm = 1;
-                        break;
-
-                    case CamionBenne:
-                        tarifkm = 1.5;
-                        break;
-
-                    case CamionCiterne:
-                        tarifkm = 1.5;
-                        break;
-
-                    case CamionFrigorifique:
-                        tarifkm = 2;
-                        break;
-                    default:
-                        tarifkm = 0.5;
-                        break;
+                    Console.WriteLine(i + ". " + shortestPath[i]);
                 }
 
-                List<string> path = new List<string>();
-                path.Add((tarifkm * distance + tarifHoraire * duration/60).ToString());
+                Console.WriteLine("Durée du trajet : " + Tools.doubleToTime(duration));
+                Console.WriteLine("Distance : " + distance + " km");
+            }
+            
+            itineraire = "";
 
-                for (int i = shortestPath.Count - 3; i >= 0; i--)
-                {
-                    path.Add(shortestPath[i]);
-                }
+            switch (vehicule)
+            {
+                case Voiture:
+                    tarifkm = 0.5;
+                    break;
 
-                for (int i = 1; i < path.Count-1; i++)
-                {
-                    itineraire += path[i] + " --> ";
-                }
-                itineraire += path[path.Count - 1];
+                case Camionette:
+                    tarifkm = 1;
+                    break;
 
-                prix = double.Parse(path[0]);
+                case CamionBenne:
+                    tarifkm = 1.5;
+                    break;
+
+                case CamionCiterne:
+                    tarifkm = 1.5;
+                    break;
+
+                case CamionFrigorifique:
+                    tarifkm = 2;
+                    break;
+                default:
+                    tarifkm = 0.5;
+                    break;
+            }
+
+            List<string> path = new List<string>();
+            path.Add((tarifkm * distance + tarifHoraire * duration/60).ToString());
+
+            for (int i = shortestPath.Count - 3; i >= 0; i--)
+            {
+                path.Add(shortestPath[i]);
+            }
+
+            for (int i = 1; i < path.Count-1; i++)
+            {
+                itineraire += path[i] + " --> ";
+            }
+            itineraire += path[path.Count - 1];
+
+            prix = double.Parse(path[0]);
 
             //Appliquons la remise liée à la fidélité du client
             prix = prix * (1 - client.Remise(entreprise));
+
+            return prix;
         }
 
         /// <summary>
@@ -212,7 +224,7 @@ namespace Projet_TransConnect
         /// </summary>
         public void CreerFacture()
         {
-            GetPrice();
+            GetPrice(true);
             //Numéro de la facture
             Random rand = new Random();
             int numeroFacture = id;

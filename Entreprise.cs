@@ -132,7 +132,7 @@ namespace Projet_TransConnect
         this.mail = mail;
         this.telephone = telephone;
         this.salaries = new List<Salarie>();        //Salariés, clients, véhicules et commandes sont initialisés vides
-            this.clients = new List<Client>();
+        this.clients = new List<Client>();
         this.vehicules = new List<Vehicule>();
         this.commandes = new List<Commande>();
         this.patron = patron;
@@ -649,8 +649,8 @@ namespace Projet_TransConnect
             Predicate<string> IsInGraph = new Predicate<string>(x => graphe.nodes.Exists(n => n.Name == x));
             string depart = Tools.Saisie("Entrez le lieu de départ de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu de départ ne peut pas être vide" }, {IsInGraph, "Cette ville ne fais pas partie des villes possibles" } });
             Predicate<string> IsDifferent = new Predicate<string>(x=> x!= depart);
-        string arrivee = Tools.Saisie("Entrez le lieu d'arrivée de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu d'arrivée ne peut pas être vide" }, { IsInGraph, "Cette ville ne fais pas partie des villes possibles" }, {IsDifferent, "La ville d'arrivée doit être différente de celle de départ" } });
-        //Fin a modif
+            string arrivee = Tools.Saisie("Entrez le lieu d'arrivée de la commande : ", new Dictionary<Predicate<string>, string> { { IsNotEmpty, "Le lieu d'arrivée ne peut pas être vide" }, { IsInGraph, "Cette ville ne fais pas partie des villes possibles" }, {IsDifferent, "La ville d'arrivée doit être différente de celle de départ" } });
+      
 
         DateTime date = DateTime.Parse(Tools.Saisie("Entrez la date de la commande : ", new Dictionary<Predicate<string>, string> { { IsDate, "La date n'est pas valide" }}));
 
@@ -667,7 +667,7 @@ namespace Projet_TransConnect
         List<Vehicule> VehiculePossible = vehicules.FindAll(v => v.IsDispo(date));
         Vehicule vehicule = FindVehicule("Quel véhicule va effectué la commande parmi ceux disponible le " + date.ToString("dd/MM/yyyy") + " : ", VehiculePossible);
 
-        Commande commande = new Commande(this, client, chauffeur, vehicule, depart, arrivee, date, -1, desscription);
+        Commande commande = new Commande(-1,this, client, chauffeur, vehicule, depart, arrivee, date, -1, desscription);
 
         commandes.Add(commande);
 
@@ -1158,7 +1158,7 @@ namespace Projet_TransConnect
             double prix = double.Parse(elements[7]);
             string description = elements[8];
 
-            Commande c = new Commande(this, client, chauffeur, vehicule, depart, arrivee, date, prix, description);
+            Commande c = new Commande(id, this, client, chauffeur, vehicule, depart, arrivee, date, prix, description);
             commandes.Add(c);
         }
     }

@@ -5,142 +5,159 @@ using System.Threading.Tasks;
 
 namespace Projet_TransConnect
 {
+    /// <summary>
+    /// Classe représentant un arbre de noeuds.
+    /// </summary>
     public class Arbre
     {
+        // Liste des noeuds dans l'arbre.
         public List<Node> nodes = new List<Node>();
 
+        /// <summary>
+        /// Constructeur de la classe Arbre.
+        /// </summary>
+        /// <param name="nodes">Liste optionnelle de noeuds pour initialiser l'arbre.</param>
         public Arbre(List<Node> nodes = null)
         {
-            if(nodes != null)
+            if (nodes != null)
             {
                 this.nodes = nodes;
-            }else{
+            }
+            else
+            {
                 this.nodes = new List<Node>();
             }
         }
 
-        public void InitiateGraphe(){
-
+        /// <summary>
+        /// Initialise le graphe en lisant les données à partir de fichiers CSV.
+        /// </summary>
+        public void InitiateGraphe()
+        {
+            // Mise à jour des données CSV.
             Tools.UpdateCSV();
+            // Lecture des coordonnées des noeuds.
             string[] lines = Tools.ReadCSV("./Sauvegarde/Coordinates.csv");
-
-            for(int i = 0; i<lines.Length; i++){
+            for (int i = 0; i < lines.Length; i++)
+            {
                 string[] values = lines[i].Split(';');
-                nodes.Add(new Node(values[0], double.Parse(values[1]), double.Parse(values[2])));               
+                nodes.Add(new Node(values[0], double.Parse(values[1]), double.Parse(values[2])));
             }
 
+            // Lecture des distances entre les noeuds.
             string[] lines2 = Tools.ReadCSV("./Sauvegarde/Distances.csv");
-            for(int i = 0; i<lines2.Length; i++){
+            for (int i = 0; i < lines2.Length; i++)
+            {
                 string[] values2 = lines2[i].Split(';');
                 Node city1 = nodes.Find(x => x.GetName() == values2[0]);
                 Node city2 = nodes.Find(x => x.GetName() == values2[1]);
 
-                city1.AddArrête(new Arrête(city1, city2,double.Parse(values2[2]), double.Parse(values2[3])));
-                city2.AddArrête(new Arrête(city1, city2,double.Parse(values2[2]), double.Parse(values2[3])));
+                city1.AddArrête(new Arrête(city1, city2, double.Parse(values2[2]), double.Parse(values2[3])));
+                city2.AddArrête(new Arrête(city1, city2, double.Parse(values2[2]), double.Parse(values2[3])));
             }
         }
 
+        /// <summary>
+        /// Convertit l'arbre en une chaîne de caractères.
+        /// </summary>
+        /// <returns>La représentation textuelle de l'arbre.</returns>
         public override string ToString()
         {
-            string output="";
-            for(int i = 0; i<nodes.Count; i++){
-                output+= nodes[i].ToString() + "\n";
+            string output = "";
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                output += nodes[i].ToString() + "\n";
             }
             return output;
         }
 
-        public List<string> Shortest_Path(string start, string end)
+        /// <summary>
+        /// Trouve le chemin le plus court entre deux noeuds dans l'arbre.
+        /// </summary>
+        /// <param name="start">Le noeud de départ.</param>
+        /// <param name="end">Le noeud de fin.</param>
+        /// <returns>Le chemin le plus court sous forme de liste de noms de noeuds et les distances et temps de parcours.</returns>
+        public List<string> ShortestPath(string start, string end)
         {
-            Dictionary<Node,(Node,double,double)> distance = new Dictionary<Node,(Node,double,double)>();
-            bool modif = true;
+            // Dictionnaire pour stocker les distances entre les noeuds.
+            Dictionary<Node, (Node, double, double)> distance = new Dictionary<Node, (Node, double, double)>();
+            // Liste des noeuds non visités.
+            List<Node> unvisited = new List<Node>();
 
+            // Recherche des noeuds de départ et de fin.
             Node Start_Node = nodes.Find(node => node.GetName() == start);
             Node End_Node = nodes.Find(node => node.GetName() == end);
 
-
-            for(int i = 0; i < nodes.Count; i++)
+            // Initialisation des distances.
+            foreach (Node node in nodes)
             {
-                if (nodes[i].GetName() == Start_Node.GetName())
+                if (node.GetName() == Start_Node.GetName())
                 {
-                    distance.Add(nodes[i], (Start_Node, 0,0));
+                    distance[node] = (Start_Node, 0, 0);
                 }
                 else
                 {
-                    distance.Add(nodes[i],(null, 100000,0));
+                    distance[node] = (null, double.PositiveInfinity, double.PositiveInfinity);
                 }
+                unvisited.Add(node);
             }
 
-
-
-            Node last = null;
-            Node temp = Start_Node;
-            while (modif)
+            // Algorithme de Dijkstra pour trouver le chemin le plus court.
+            while (unvisited.Any())
             {
-                modif = false;
-                double min = 1000000;
-                Node node_min = null;
-                double length = 0;
-                double km = 0;
-                List<Arrête> temp_arrete = temp.GetArrêtes(); 
-                for(int i = 0; i<temp_arrete.Count; i++) 
-                {
-                    if (temp.GetName() == temp_arrete[i].GetStart().GetName())
-                    {
-                        if (last != null)
-                        {
-                            length = distance[temp].Item2 + temp_arrete[i].GetTime();
-                            km = distance[temp].Item3 + temp_arrete[i].GetDistance();
-                        }
-                        else
-                        {
-                            length = temp_arrete[i].GetTime();
-                            km = temp_arrete[i].GetDistance();
-                        }
-                        Console.WriteLine("Length : " + length);
-                        Console.WriteLine(distance[temp_arrete[i].GetEnd()].Item2);
+                Node current = unvisited.OrderBy(node => distance[node].Item2).First();
 
-                        if (length < distance[temp_arrete[i].GetEnd()].Item2)
-                        {
-                            Console.WriteLine("Modification");
-                            modif = true;
-                            distance[temp_arrete[i].GetEnd()] = (temp, length, km);
-                            if (min > length)
-                            {
-                                min = length;
-                                node_min = temp_arrete[i].GetEnd();
-                            }
-                        }
+                if (current == End_Node)
+                    break;
+
+                unvisited.Remove(current);
+
+                foreach (Arrête neighbor in current.GetArrêtes())
+                {
+                    Node neighborNode = neighbor.GetEnd() == current ? neighbor.GetStart() : neighbor.GetEnd();
+                    double alt = distance[current].Item2 + neighbor.GetDistance();
+                    double alt2 = distance[current].Item3 + neighbor.GetTime();
+
+                    if (alt < distance[neighborNode].Item2)
+                    {
+                        distance[neighborNode] = (current, alt, alt2);
                     }
                 }
-                last = temp;
-                temp = node_min;
-
             }
 
-
-            foreach (var key in distance.Keys)
-            {
-                if (distance[key].Item1 != null)
-                {
-                    Console.WriteLine("Ville : {0}, Valeur : ({1}, {2})", key.GetName(), distance[key].Item1.GetName(), distance[key].Item2);
-                }
-            }
-
+            // Reconstruction du chemin le plus court.
             List<string> output = new List<string>();
-
-            Node temp2 = End_Node;
-            while (distance[temp2].Item2 != 0)
+            Node temp = End_Node;
+            output.Add(End_Node.GetName());
+            while (distance[temp].Item1 != Start_Node)
             {
-                output.Add(temp2.GetName());
-                temp2 = distance[temp2].Item1;
+                output.Add(distance[temp].Item1.GetName());
+                temp = distance[temp].Item1;
             }
-
-            output.Add(start);
-            output.Add(distance[End_Node].Item2.ToString());
-            output.Add(distance[End_Node].Item3.ToString());
+            output.Add(Start_Node.GetName());
+            output.Add(distance[End_Node].Item2.ToString()); // Distance totale
+            output.Add(distance[End_Node].Item3.ToString()); // Temps total
 
             return output;
         }
 
+        /// <summary>
+        /// Vérifie si tous les noeuds ont été visités dans le calcul du chemin le plus court.
+        /// </summary>
+        /// <param name="distance">Dictionnaire des distances.</param>
+        /// <returns>True si tous les noeuds ont été visités, sinon False.</returns>
+        public static bool IsEnd(Dictionary<Node, (Node, double, double)> distance)
+        {
+            bool end = true;
+
+            foreach (var key in distance.Keys)
+            {
+                if (distance[key].Item1 == null)
+                {
+                    end = false;
+                }
+            }
+            return end;
+        }
     }
 }

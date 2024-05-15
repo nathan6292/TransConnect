@@ -18,7 +18,7 @@ namespace Projet_TransConnect
     {
 
         /// <summary>
-        /// Obtenir la durée du trajet entre deux points en direct avec une API
+        /// Obtenir la durï¿½e du trajet entre deux points en direct avec une API
         /// </summary>
         /// <param name="startCoordinates"></param>
         /// <param name="endCoordinates"></param>
@@ -59,10 +59,10 @@ namespace Projet_TransConnect
         }
 
         /// <summary>
-        /// Fonction permettant de faire une rentrée utilisateur avec des conditions
+        /// Fonction permettant de faire une rentrï¿½e utilisateur avec des conditions
         /// </summary>
-        /// <param name="texte"></param>    Texte à affihcer
-        /// <param name="dico"></param> Dictionnaire de Predicate (conditions à respecter) assosiées à un message d'erreur
+        /// <param name="texte"></param>    Texte ï¿½ affihcer
+        /// <param name="dico"></param> Dictionnaire de Predicate (conditions ï¿½ respecter) assosiï¿½es ï¿½ un message d'erreur
         /// <returns></returns>
         public static string Saisie(string texte, Dictionary<Predicate<string>, string> dico)
         {
@@ -71,19 +71,19 @@ namespace Projet_TransConnect
 
             while (!success)    //Tant que la saisie n'est pas valide
             {
-                Console.Write(texte);   //On écrit le texte specifiant à l'utilisateur ce qu'il doit rentrer
+                Console.Write(texte);   //On ï¿½crit le texte specifiant ï¿½ l'utilisateur ce qu'il doit rentrer
                 input = Console.ReadLine();
                 foreach (var key in dico.Keys)  //On parcours chaque condition (Predicate) du dictionnaire
                 {
                     if (key(input))
                     {
-                        success = true;         //Si elle est respectée, on passe success à true
+                        success = true;         //Si elle est respectï¿½e, on passe success ï¿½ true
                     }
                     if (!key(input))        
                     {
-                        Console.WriteLine(dico[key] + "\n");    //Sinon on affiche le message d'erreur associé à la condition
+                        Console.WriteLine(dico[key] + "\n");    //Sinon on affiche le message d'erreur associï¿½ ï¿½ la condition
                         success = false;
-                        break;          //On arrete le parcours des conditions car une n'a pas été satisfaite
+                        break;          //On arrete le parcours des conditions car une n'a pas ï¿½tï¿½ satisfaite
                     }
                 }
             }
@@ -91,7 +91,7 @@ namespace Projet_TransConnect
         }
 
         /// <summary>
-        /// Identique à Saisie mais en utilisant le dictionary de la classe DictionnaireChainee
+        /// Identique ï¿½ Saisie mais en utilisant le dictionary de la classe DictionnaireChainee
         /// </summary>
         /// <param name="texte"></param>
         /// <param name="dico"></param>
@@ -137,7 +137,7 @@ namespace Projet_TransConnect
         }
 
         /// <summary>
-        /// Mettre à jour le csv dans les fichiers
+        /// Mettre ï¿½ jour le csv dans les fichiers
         /// </summary>
         public static void UpdateCSV()
         {
