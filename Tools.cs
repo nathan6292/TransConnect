@@ -26,7 +26,7 @@ namespace Projet_TransConnect
         public static double GetTravelDuration(double[] startCoordinates, double[] endCoordinates)
         {
             // Get the Mapbox API token from the environment variables
-            string mapboxToken = "pk.eyJ1IjoibmF0aGFuZmxldXJ5IiwiYSI6ImNsdXpxN2puODE5Y3cyam53bXJ2cTNqdG0ifQ.f3OLdt1DwM6NGTOaS82Dgw";
+            string mapboxToken = ""; // Mettre votre api
 
             // Create the request URL (We use ToString with the InvariantCulture to ensure that the decimal separator is a dot and not a comma)
             string coordinates = startCoordinates[0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + startCoordinates[1].ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" + endCoordinates[0].ToString(System.Globalization.CultureInfo.InvariantCulture) + "," + endCoordinates[1].ToString(System.Globalization.CultureInfo.InvariantCulture);
