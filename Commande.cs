@@ -379,7 +379,7 @@ namespace Projet_TransConnect
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
 
             // Définir les informations d'identification pour l'authentification SMTP
-            smtpClient.Credentials = new System.Net.NetworkCredential("mr.dupond.transconnect@gmail.com", "elid cyth jdpi pnvc");
+            smtpClient.Credentials = new System.Net.NetworkCredential("");
             smtpClient.EnableSsl = true;
             smtpClient.Port = 587;
 
