@@ -1,0 +1,14 @@
+Voiture,ABC123,Renault,Clio,2018,45,5
+Voiture,DEF456,Peugeot,208,2019,45,5
+Voiture,GHI789,Citroen,C3,2020,50,5
+Voiture,JKL012,Toyota,Yaris,2021,40,5
+Voiture,MNO345,Ford,Fiesta,2022,45,5
+Camionette,PQR678,Renault,Kangoo,2018,70,3,5
+Camionette,STU901,Peugeot,Partner,2019,60,3,5
+Camionette,VWX234,Citroen,Berlingo,2020,90,3,5
+Camionette,YZA567,Fiat,Ducato,2021,85,3,5
+Camionette,BCD890,Mercedes,Sprinter,2022,75,3,5
+CamionFrigorifique,EFG234,Renault,Trafic,2018,200,3,5,12
+CamionBenne,HIJ567,Iveco,Daily,2019,150,3,5,3,True
+CamionCiterne,KLM890,Mercedes,Vito,2020,220,3,5,gaz
+CamionBenne,FR13OMG,Mercedes,AMG,1998,150,130000,48,1,False
