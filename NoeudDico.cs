@@ -13,7 +13,7 @@ namespace Projet_TransConnect
 
         #region Accesseurs
         /// <summary>
-        /// Accesseur de la clé en lecture et écriture
+        /// Accesseur de la clï¿½ en lecture et ï¿½criture
         /// </summary>
         public T Key
     {
@@ -22,7 +22,7 @@ namespace Projet_TransConnect
     }
 
         /// <summary>
-        /// Accesseur de la valeur en lecture et écriture
+        /// Accesseur de la valeur en lecture et ï¿½criture
         /// </summary>
         public U Value
     {
@@ -31,7 +31,7 @@ namespace Projet_TransConnect
     }
 
         /// <summary>
-        ///        /// Accesseur du noeud suivant en lecture et écriture
+        ///        /// Accesseur du noeud suivant en lecture et ï¿½criture
         ///               /// </summary>
         public NoeudDico<T,U> Suivant
     {
@@ -54,7 +54,7 @@ namespace Projet_TransConnect
         this.suivant = suivant;
     }
         /// <summary>
-        /// Affichage de la clé et de la valeur
+        /// Affichage de la clï¿½ et de la valeur
         /// </summary>
         /// <returns></returns>
         public override string ToString()

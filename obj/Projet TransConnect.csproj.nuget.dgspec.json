@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\Projet TransConnect V2\\Projet TransConnect.csproj": {}
+    "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\TransConnect - Nathan et Valentin\\Projet TransConnect\\Projet TransConnect.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\Projet TransConnect V2\\Projet TransConnect.csproj": {
+    "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\TransConnect - Nathan et Valentin\\Projet TransConnect\\Projet TransConnect.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\Projet TransConnect V2\\Projet TransConnect.csproj",
+        "projectUniqueName": "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\TransConnect - Nathan et Valentin\\Projet TransConnect\\Projet TransConnect.csproj",
         "projectName": "Projet TransConnect",
-        "projectPath": "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\Projet TransConnect V2\\Projet TransConnect.csproj",
+        "projectPath": "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\TransConnect - Nathan et Valentin\\Projet TransConnect\\Projet TransConnect.csproj",
         "packagesPath": "C:\\Users\\Nathan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\Projet TransConnect V2\\obj\\",
+        "outputPath": "C:\\Users\\Nathan\\OneDrive\\ESILV\\9. Langage C#\\TransConnect - Nathan et Valentin\\Projet TransConnect\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
